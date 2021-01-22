@@ -51,6 +51,7 @@ service.interceptors.response.use(response => {
         window.location.href = "http://localhost:8080/#/"
         break;
       case 403:
+        history.back()
         error.message = '拒绝访问'
         break;
       case 404:

@@ -86,7 +86,7 @@ export default {
             Message.success("注册成功,正在跳转首页...");
             this.timer = setTimeout(() => {
               //设置延迟执行
-              this.$router.push({path: "/Helloword" })
+              this.$router.push({ path: "/buyer/Helloword" });
               console.log("ok");
             }, 1000);
           } else {
@@ -139,10 +139,15 @@ export default {
     checkSecPassword: function () {
       var password2 = this.accountPassword2;
       var password = this.accountPassword;
-      if (password2 == password) {
-        this.passwordMsg1 = "重复密码符合要求";
+      var reg = /^[,./!@#$%&0-9a-zA-Z]{4,9}$/;
+      if (!reg.test(password2)) {
+        this.passwordMsg1 = "重复密码不符合要求";
       } else {
-        this.passwordMsg1 = "两次密码不一致";
+        if (password2 == password) {
+          this.passwordMsg1 = "重复密码符合要求";
+        } else {
+          this.passwordMsg1 = "两次密码不一致";
+        }
       }
     },
   },

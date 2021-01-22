@@ -11,7 +11,25 @@ export default{
 	queryAll(params){
     	return http.get(`${resquest}/shop/queryAll.do`,params)
 	},
-	 postFormAPI(params){
-    	return http.post(`${resquest}/Login/login.do`,params)
-	}
+	getLimit(){
+		return http.get(`${resquest}/Login/getLimit.do`)
+	},
+	shopQueryById(params){
+		return http.get(`${resquest}/shop/queryById.do`,params)
+	},
+	selectShop(params){
+		return http.get(`${resquest}/shop/queryByName.do`,params)
+	},
+	 accountQueryAll(){
+    	return http.get(`${resquest}/Login/queryAll.do`)
+	},
+	accountDelete(params){
+		return http.get(`${resquest}/Login/accountDelete.do`,params)
+	},
+	queryAllCommodity(){
+		return http.get(`${resquest}/shop/queryAllCommodity.do`)
+	},
+	delectCommodity(params){
+		return http.get(`${resquest}/shop/delectCommodity.do`,params)
+	},
 }

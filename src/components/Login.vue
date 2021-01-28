@@ -69,7 +69,7 @@ export default {
             var theCode = response.data.code;
             // sessionStorage["token"]=JSON.stringify(token);
             sessionStorage["token"] = token;
-           
+            sessionStorage["userName"] = this.accountName;
             console.log(response);
             if (theCode == "200") {
               api

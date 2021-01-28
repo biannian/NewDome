@@ -8,7 +8,9 @@
     >
       <el-menu-item index="">处理中心</el-menu-item>
       <el-menu-item @click="drawer = true">
-        <el-badge :value="12" class="item">消息中心</el-badge></el-menu-item
+        <el-badge :value="msgCount" class="item"
+          >消息中心</el-badge
+        ></el-menu-item
       >
       <el-menu-item index="4"
         ><a href="" target="_blank"
@@ -23,39 +25,70 @@
       </el-submenu>
     </el-menu>
     <el-drawer
-      title="消息列表"
+      title="在线列表"
       :visible.sync="drawer"
       :direction="direction"
       :before-close="handleClose"
       size="50%"
     >
-      <span>我来啦!</span>
+      <el-menu
+        class="el-menu-vertical-demo"
+        background-color="#C0C4CC"
+        text-color="#303133"
+      >
+        <el-menu-item @click="sendToAll">
+          <p @click="innerDrawer = true">群聊（{{ OnlineCount }}）</p>
+        </el-menu-item>
+        <!-- <el-menu-item
+          v-for="(item, index) in userNames"
+          :key="index"
+          @click="sendTo(item)"
+        >
+          {{ item }}
+        </el-menu-item> -->
+      </el-menu>
       <div>
-        <el-button @click="innerDrawer = true">打开里面的!</el-button>
         <el-drawer
-          title="我是里面的"
+          title="聊天室"
           :append-to-body="true"
           :before-close="handleClose"
           size="50%"
           :visible.sync="innerDrawer"
         >
-        <div style="overflow:auto;width:90%;margin-left:3%;margin-top:1%;height:60%;border: 1px solid #eee">
-         <el-card class="box-card" v-for="(item,index) in msg_data" :key="index">
-           <p style="float:right"> {{item}}</p>
-          </el-card>
-         </div>
-        <div style="margin-left:3%">
-   <el-button icon="el-icon-picture-outline-round" circle></el-button>
-        </div>
-       
-        <textarea
+          <div
+            style="
+              overflow: auto;
+              width: 90%;
+              margin-left: 3%;
+              margin-top: 1%;
+              height: 60%;
+              border: 1px solid #eee;
+            "
+          >
+            <div class="info"  v-for="(item, index) in message" :key="'info-'+ index">
+              {{ item.date }} <br />
+              {{ item.userName }} :{{ item.msg }}
+            </div>
+            <div style="margin-left:70%"  class="info1" v-for="(item, index) in myMsg" :key="'info1-'+ index">
+              {{ item.date }} <br/>
+              {{ item.userName }} :{{ item.msg }}
+            </div>
+          </div>
+          <div style="margin-left: 3%"></div>
+          <textarea
             placeholder="输入聊天内容"
             rows="3"
-            style="width:80%;float:left;margin-left:4%"
+            style="width: 80%; float: left; margin-left: 4%"
             class="form-control"
             v-model="sendData"
           ></textarea>
-           <el-button style="margin-left:1%" type="success"  @click="websocketsend" plain>发送</el-button>
+          <el-button
+            style="margin-left: 1%"
+            type="success"
+            @click="websocketsend"
+            plain
+            >发送</el-button
+          >
         </el-drawer>
       </div>
     </el-drawer>
@@ -66,8 +99,15 @@
 export default {
   data() {
     return {
-       userName: "匿名",
-       msg_data: [],
+      msgCount: "0",
+      OnlineCount: "",
+      userName: "",
+      message: [],
+      myMsg:[],
+      AllMsg: new Map(),
+      userName: "",
+      toWho: "",
+      userNames: [],
       sendData: "",
       innerDrawer: false,
       drawer: false,
@@ -76,7 +116,23 @@ export default {
       handleSelect: "",
     };
   },
+  watch: {
+    drawer(newValue) {
+      if (newValue == true) {
+        this.msgCount = "0";
+      }
+    },
+   
+ 
+  },
   methods: {
+    sendTo(item) {
+      this.innerDrawer = true;
+      this.toWho = item;
+    },
+    sendToAll() {
+      this.toWho = "All";
+    },
     remove: function () {
       sessionStorage.clear();
       this.$router.push({ path: "/" });
@@ -84,8 +140,11 @@ export default {
     handleClose(done) {
       done();
     },
-     initWebSocket: function () {
-      this.websock = new WebSocket("ws://localhost:8090/websocket");
+    initWebSocket: function () {
+      this.userName = sessionStorage["userName"];
+      this.websock = new WebSocket(
+        "ws://localhost:8087/websocket/" + this.userName
+      );
       this.websock.onopen = this.websocketonopen;
       this.websock.onerror = this.websocketonerror;
       this.websock.onmessage = this.websocketonmessage;
@@ -98,10 +157,18 @@ export default {
       console.log("WebSocket连接发生错误");
     },
     websocketonmessage: function (e) {
-      var da = e.data;
-      
-      console.log(da);
-      this.msg_data.unshift(da);
+      ++this.msgCount;
+      let json = JSON.parse(e.data);
+        this.OnlineCount = json.onLineCount;
+      if (json.userNames) {
+        this.userNames = json.userNames;
+      }
+      //to当作map的key值
+      this.AllMsg.set(json.to, json);
+      if (this.toWho ) {
+          let msg = this.AllMsg.get(this.toWho);
+          this.message.push(msg);
+      }
     },
     websocketclose: function (e) {
       console.log("connection closed (" + e.code + ")");
@@ -110,15 +177,22 @@ export default {
       let date = new Date();
       let date1 =
         date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-
-      this.websock.send(date1 + this.userName + ":" + this.sendData);
+      let a = {
+        userName: this.userName,
+        msg: this.sendData,
+        date: date1,
+        to: this.toWho,
+      };
+      let data = JSON.stringify(a);
+      this.websock.send(data);
+      console.log(this.myMsg);
       this.sendData = "";
     },
   },
-   created() {
+  created() {
     this.initWebSocket();
   },
-   destroyed: function () {
+  destroyed: function () {
     this.websocketclose();
   },
 };

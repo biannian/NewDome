@@ -141,7 +141,7 @@
         <div
           style="position: absolute; right: 81px; bottom: 32px; z-index: 100"
         >
-          <el-button round type="success">支付</el-button>
+          <el-button round @click="pay" type="success">支付</el-button>
         </div>
         <el-card class="box-card" style="border-radius: 30px">
           <p style="position: absolute; top: 6px">
@@ -185,6 +185,21 @@ export default {
   },
 
   methods: {
+    pay(){
+      let t = new Date();
+      let time = t.getHours()+":"+t.getMinutes()+":"+t.getSeconds();
+  console.log(time);
+      // let shop = {
+      // orderBuyerId:
+      // orderSellerId:
+      // orderRiderId:
+      // orderState: 0,
+      // orderBuyerTime:
+      
+
+      // }
+        console.log(this.shopping);
+    },
     handleSelect() {},
 
     buttonAdd(commodity) {

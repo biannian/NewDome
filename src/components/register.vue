@@ -63,8 +63,10 @@ export default {
   },
   methods: {
     register: function () {
+      console.log(this.accountLimit);
       if (!this.accountName) {
-        Message.error("注册失败");
+        Message.error("请输入用户名");
+        return false;
       }
       if (
         this.nameMsg == "用户名可用" &&
@@ -81,13 +83,14 @@ export default {
             accountBan: this.accountBan,
           },
         }).then((response) => {
+          console.log(response);
           var theCode = response.data.code;
           if (theCode == "200") {
+            sessionStorage["token"] = response.data.result;
             Message.success("注册成功,正在跳转首页...");
             this.timer = setTimeout(() => {
               //设置延迟执行
               this.$router.push({ path: "/buyer/Helloword" });
-              console.log("ok");
             }, 1000);
           } else {
             Message.error("注册失败");

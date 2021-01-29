@@ -6,16 +6,14 @@
       mode="horizontal"
       router
     >
-      <el-menu-item index="">处理中心</el-menu-item>
+      <el-menu-item index="/buyer/Helloword">首页</el-menu-item>
       <el-menu-item @click="drawer = true">
         <el-badge :value="msgCount" class="item"
           >消息中心</el-badge
         ></el-menu-item
       >
-      <el-menu-item index="4"
-        ><a href="" target="_blank"
-          ><el-badge :value="3" class="item">订单管理</el-badge></a
-        >
+      <el-menu-item index="/buyer/order" >
+          <el-badge :value="orderCount" @click="orderCount = '0'"  class="item">订单管理</el-badge>
       </el-menu-item>
       <el-submenu index="5">
         <template slot="title">个人中心</template>
@@ -96,9 +94,11 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
+      orderCount:"",
       msgCount: "0",
       OnlineCount: "",
       userName: "",
@@ -117,13 +117,9 @@ export default {
     };
   },
   watch: {
-    drawer(newValue) {
-      if (newValue == true) {
-        this.msgCount = "0";
-      }
+    drawer() {
+        this.msgCount ='';
     },
-   
- 
   },
   methods: {
     sendTo(item) {
@@ -171,7 +167,7 @@ export default {
       }
     },
     websocketclose: function (e) {
-      console.log("connection closed (" + e.code + ")");
+      // console.log("connection closed (" + e.code + ")");
     },
     websocketsend() {
       let date = new Date();

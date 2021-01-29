@@ -32,4 +32,10 @@ export default{
 	delectCommodity(params){
 		return http.get(`${resquest}/shop/delectCommodity.do`,params)
 	},
+	addOrder(params){
+		return http.post(`${resquest}/Order/addOrder.do`,params)
+	},
+	selectOrder(params){
+		return http.get(`${resquest}/Order/selectOrder.do`,params)
+	},
 }

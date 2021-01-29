@@ -2,10 +2,13 @@
   <div>
     <el-container>
       <el-header>
-        <div style="width: 20%; float: left; margin-top: 50px">
-          <el-page-header @back="goBack" content="店铺详情" />
+        <div style="width: 15%; float: left; margin-top: 50px">
+          <el-page-header @back="goBack" content="店铺详情" ></el-page-header>
         </div>
-        <div style="width: 80%; float: right">
+        <div style="width: 30%; color:#409EFF; margin-top:3%;float: left; font-size: 25px;">   
+        {{shopName}}
+        </div>
+        <div style="width: 50%; float: right">
           <Topfile></Topfile>
         </div>
       </el-header>
@@ -153,6 +156,8 @@
   </div>
 </template>
 <script>
+import { Message } from "element-ui";
+import dateFormat from "../../utils/time";
 import Topfile from "../topfile.vue";
 import api from "@/api/api";
 import Index from "./index.vue";
@@ -160,9 +165,11 @@ export default {
   components: { Topfile, Index },
   data() {
     return {
+      shopName:"",
       shopMenu: "",
       curActive: "",
       indexId: "",
+      orderBuyerId: "",
       shopInfo: "",
       commoditys: [],
       shopId: "",
@@ -185,20 +192,34 @@ export default {
   },
 
   methods: {
-    pay(){
+    pay() {
       let t = new Date();
-      let time = t.getHours()+":"+t.getMinutes()+":"+t.getSeconds();
-  console.log(time);
-      // let shop = {
-      // orderBuyerId:
-      // orderSellerId:
-      // orderRiderId:
-      // orderState: 0,
-      // orderBuyerTime:
-      
-
-      // }
-        console.log(this.shopping);
+      let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
+      console.log(time);
+          let shop = {
+            orderBuyerId: sessionStorage["userName"],
+            shopId: this.$route.query.shopId,
+            orderState: 0,
+            orderBuyerTime: time,
+            shopping:this.shopping
+          };
+      api
+        .addOrder(shop)
+        .then((response) => {
+         if(response.data.code == '200')
+         {
+             Message.success("支付成功");
+             
+               this.timer = setTimeout(() => {
+              //设置延迟执行
+              this.$router.push({ path: "/buyer/order" });
+            }, 800);
+         }else{
+             Message.error("购买失败");
+         }
+        })
+        .catch((error) => console.log(error));
+      console.log(shop);
     },
     handleSelect() {},
 
@@ -286,7 +307,6 @@ export default {
     },
   },
   mounted() {
-   
     let shops = {
       shopId: this.$route.query.shopId,
     };
@@ -299,6 +319,8 @@ export default {
         iterator.a = 0;
       }
       this.shopMenu = res.data.result.shopMenu;
+
+      this.shopName = res.data.result.shop.shopName;
     });
   },
 };

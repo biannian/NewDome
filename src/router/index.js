@@ -11,6 +11,7 @@ import accountList from '@/components/root/accountList'
 import shopList from '@/components/seller/shopList'
 import personalAddress from '@/components/buyer/personalAddress'
 import chat from '@/components/buyer/chat'
+import order from '@/components/buyer/order'
 
 Vue.use(Router)
 export const routes = [
@@ -58,6 +59,10 @@ export const routes = [
     path: '/buyer/chat',
     name: 'chat',
     component: chat,
+  }, {
+    path: '/buyer/order',
+    name: 'order',
+    component: order,
   }
 
 ]

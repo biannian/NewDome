@@ -87,6 +87,7 @@ export default {
           var theCode = response.data.code;
           if (theCode == "200") {
             sessionStorage["token"] = response.data.result;
+            sessionStorage["userName"] = this.accountName;
             Message.success("注册成功,正在跳转首页...");
             this.timer = setTimeout(() => {
               //设置延迟执行

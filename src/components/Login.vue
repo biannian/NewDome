@@ -68,14 +68,16 @@ export default {
             var token = response.data.result;
             var theCode = response.data.code;
             // sessionStorage["token"]=JSON.stringify(token);
+            console.log(response);
             sessionStorage["token"] = token;
             sessionStorage["userName"] = this.accountName;
             console.log(response);
             if (theCode == "200") {
+            
               api
                 .getLimit()
                 .then((response) => {
-                  console.log(response.data.result.accountLimit);
+                  sessionStorage["accountUserId"]= response.data.result.accountUserId;
                   switch (response.data.result.accountLimit) {
                     case 1:
                       this.$router.push({ path: "/buyer/Helloword" });
@@ -88,7 +90,7 @@ export default {
                       break;
                     case 4:
                     this.$router.push({ path: "/root/accountIndex"});
-                    sessionStorage["userName"] = response.data.result.accountName;
+               
                       break;
                   }
                 })

@@ -120,8 +120,8 @@ export default {
             accountName: this.accountName,
           },
         }).then((response) => {
-          var theCode = response.data.code;
-          if (theCode == "200") {
+          console.log(response.data);
+          if (response.data) {
             this.nameMsg = "用户名重复";
           } else {
             this.nameMsg = "用户名可用";

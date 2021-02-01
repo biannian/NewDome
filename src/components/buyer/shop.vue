@@ -8,7 +8,7 @@
         <div style="width: 30%; color:#409EFF; margin-top:3%;float: left; font-size: 25px;">   
         {{shopName}}
         </div>
-        <div style="width: 50%; float: right">
+        <div style="width: 50%; float: right;margin-right:20px">
           <Topfile></Topfile>
         </div>
       </el-header>

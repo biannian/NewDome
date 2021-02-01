@@ -17,24 +17,35 @@
       <hr />
      
         <el-container style="height: 550px; border: 1px solid #eee">
-    <el-aside width="25%">
-            <el-menu :default-active="curActive" @select="handleSelect">
+    <el-aside width="20%">
+            <el-menu @select="select">
               <p style="font-size: 20px; margin-left: 100px; margin-top: 10px">
-                订单
+                订单编号
               </p>
               <el-menu-item-group>
                 <el-menu-item
-                  v-for="(orderMenus, indexId) in orderMenu"
-                  @click="goAssignBlock('block' + indexId, 50)"
+                  v-for="(orders, indexId) in orders"
                   :key="indexId"
-                  :index="'' + indexId"
+                  :index="orders.orderId.toString()"
                 >
-                  {{ orderMenus }}
+                <p style="margin-left:50px"> {{ orders.orderId}}</p> 
                 </el-menu-item>
               </el-menu-item-group>
             </el-menu>
           </el-aside>
           <el-main>
+              <div  v-for="(order, index) in order"
+                  :key="index">
+              {{order}}
+            </div>
+            <div   v-for="(orderDetail, index) in orderDetail"
+                  :key="index">
+     {{orderDetail}}
+                  {{orderDetail.commodityName}}
+                   {{orderDetail.shoppingNumber}}
+                       {{orderDetail.commodityImg}}
+                          {{orderDetail.commodityPrice}}
+            </div>
             
           </el-main>
     </el-container>
@@ -50,9 +61,33 @@ export default {
   
   components: { topfile },
 data() {
-    return {}
+    return {
+      orders:[],
+      orderDetails:[],
+      order:[],
+      orderDetail:[],
+    }
 },
 methods:{
+  select(orderId){
+    console.log(orderId);
+    this.order = [];
+    this.orderDetail= [];
+    for (let index = 0; index < this.orders.length; index++) {
+          if(this.orders[index].orderId == orderId) {
+              this.order.push(this.orders[index])
+          }
+    }
+    for (let i = 0; i < this.orders.length; i++) {
+          if(this.orderDetails[i][0].shoppingOrderId == orderId) {
+              this.orderDetail.push(this.orderDetails[i])
+          }
+    }
+  
+    console.log(this.orderDetail);
+
+    console.log(this.order);
+  },
     goBack(){
         history.back();
     }
@@ -66,6 +101,8 @@ mounted(){
       .selectOrder(params)
        .then((response) => {
           console.log(response);
+          this.orders = response.data.result.orders;
+          this.orderDetails = response.data.result.shoppings;
        }).catch((error) => console.log(error));
 }
 }

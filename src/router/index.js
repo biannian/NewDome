@@ -13,6 +13,9 @@ import personalAddress from '@/components/buyer/personalAddress'
 import chat from '@/components/buyer/chat'
 import order from '@/components/buyer/order'
 
+import informationEdit from '@/components/buyer/informationEdit'
+
+
 Vue.use(Router)
 export const routes = [
   {
@@ -63,6 +66,10 @@ export const routes = [
     path: '/buyer/order',
     name: 'order',
     component: order,
+  }, {
+    path: '/buyer/informationEdit',
+    name: 'informationEdit',
+    component: informationEdit,
   }
 
 ]

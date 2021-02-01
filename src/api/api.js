@@ -38,4 +38,11 @@ export default{
 	selectOrder(params){
 		return http.get(`${resquest}/Order/selectOrder.do`,params)
 	},
+	getBuyerAddress(params){
+		return http.get(`${resquest}/Buyer/getBuyerAddress.do`,params)
+	},
+	updateAddress(params){
+		return http.post(`${resquest}/Buyer/updateAddress.do`,params)
+	},
+
 }

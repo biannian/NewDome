@@ -19,6 +19,7 @@
         <template slot="title">个人中心</template>
         <el-menu-item index="5-1">会员中心</el-menu-item>
         <el-menu-item index="/buyer/personalAddress">管理收货地址</el-menu-item>
+             <el-menu-item index="/buyer/informationEdit">账户信息修改</el-menu-item>
         <el-menu-item v-on:click="remove">注销</el-menu-item>
       </el-submenu>
     </el-menu>

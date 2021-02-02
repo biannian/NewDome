@@ -113,7 +113,10 @@ export default {
             .then((response) => {
               console.log(response);
               if (response.data.result == 1) {
-                Message.success("提交成功！");
+                Message.success("提交成功！正在跳转上个页面...");
+                 this.timer = setTimeout(() => {
+                  history.back();
+            }, 1000);
               } else {
                 Message.error("提交失败！");
               }
@@ -134,7 +137,6 @@ export default {
     let accountName = {
       accountName: sessionStorage["userName"],
     };
-
     api
       .getBuyerAddress(accountName)
       .then((response) => {

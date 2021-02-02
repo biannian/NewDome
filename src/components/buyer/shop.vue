@@ -203,6 +203,7 @@ export default {
             orderBuyerTime: time,
             shopping:this.shopping
           };
+          console.log(shop);
       api
         .addOrder(shop)
         .then((response) => {
@@ -219,7 +220,7 @@ export default {
          }
         })
         .catch((error) => console.log(error));
-      console.log(shop);
+    
     },
     handleSelect() {},
 
@@ -264,7 +265,7 @@ export default {
       // map.get(commodity.commodityId)
     },
     goBack() {
-      this.$router.push({ path: "/buyer/Helloword" });
+      history.back();
     },
 
     //el 标签  speed 滚动速率 此处是50px 值越大滚动的越快

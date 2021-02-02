@@ -26,6 +26,12 @@ export default{
 	accountDelete(params){
 		return http.get(`${resquest}/Login/accountDelete.do`,params)
 	},
+	queryByName(params){
+		return http.get(`${resquest}/Login/queryByName.do`,params)
+	},
+	updatePassword(params){
+		return http.get(`${resquest}/Login/updatePassword.do`,params)
+	},
 	queryAllCommodity(){
 		return http.get(`${resquest}/shop/queryAllCommodity.do`)
 	},

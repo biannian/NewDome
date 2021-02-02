@@ -29,7 +29,7 @@
               ></el-input>
             </el-col>
           </el-form-item>
-          <el-form-item label="密码" prop="accountPassword">
+          <el-form-item label="新密码" prop="accountPassword">
             <el-col :span="6">
               <el-input
                 show-password
@@ -62,6 +62,8 @@
 </template>
 <script>
 import topfile from "../topfile.vue";
+import api from "@/api/api";
+import { Message } from "element-ui";
 export default {
   components: { topfile },
   data() {
@@ -78,7 +80,7 @@ export default {
     var validatePass2 = (rule, value, callback) => {
       if (value === "") {
         callback(new Error("请再次输入密码"));
-      } else if (value !== this.ruleForm.pass) {
+      } else if (value !== this.ruleForm.accountPassword) {
         callback(new Error("两次输入密码不一致!"));
       } else {
         callback();
@@ -103,9 +105,26 @@ export default {
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          alert("submit!");
+          let a ={
+            accountName: this.ruleForm.accountName,
+            accountPassword:this.ruleForm.accountPassword
+          }
+             api
+            .updatePassword(a)
+            .then((response) => {
+              console.log(response);
+              if (response.data.result == 1) {
+                Message.success("修改成功！正在跳转上个页面...");
+                 this.timer = setTimeout(() => {
+                  history.back();
+            }, 1000);
+              } else {
+                Message.error("修改失败！");
+              }
+            })
+            .catch((error) => console.log(error));
         } else {
-          console.log("error submit!!");
+         Message.error("修改失败！");
           return false;
         }
       });
@@ -114,6 +133,17 @@ export default {
       this.$refs[formName].resetFields();
     },
   },
+  mounted(){
+    let a ={
+      accountName: sessionStorage["userName"],
+    }
+     api
+      .queryByName(a)
+      .then((response) => {
+         this.ruleForm.accountName = response.data.result.accountName;
+      })
+      .catch((error) => console.log(error));
+  }
 };
 </script>
 

@@ -112,7 +112,7 @@ export default {
              api
             .updatePassword(a)
             .then((response) => {
-              console.log(response);
+      
               if (response.data.result == 1) {
                 Message.success("修改成功！正在跳转上个页面...");
                  this.timer = setTimeout(() => {

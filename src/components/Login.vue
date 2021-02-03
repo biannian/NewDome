@@ -83,10 +83,11 @@ export default {
                       this.$router.push({ path: "/buyer/Helloword" });
                       break;
                     case 2:
-                       this.$router.push({ path: "/seller/shopList" });
+                        Message.error("页面尚未完成");
                       break;
                     case 3:
-                      Message.error("页面尚未完成");
+                         this.$router.push({ path: "/seller/sellerShopList" });
+                  
                       break;
                     case 4:
                     this.$router.push({ path: "/root/accountIndex"});

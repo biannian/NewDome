@@ -33,25 +33,64 @@
           <div class="inf" v-for="(shop, index) in shop" :key="'inf-' + index">
             <p @click="toShop(shop)">{{ shop }}</p>
           </div>
-          <div class="info" v-for="(order, index) in order" :key="index">
-            订单号：{{ order.orderId }} 订单时间：{{
-              order.orderBuyerTime
-            }}
-            订单状态：{{ order.orderState }}
-          </div>
           <div
-            class="info2"
-            v-for="(orderDetail, key) in orderDetail"
-            :key="'info2-' + key"
+            class="info"
+            v-for="(order, index) in order"
+            :key="'info-' + index"
           >
-            商品名: {{ orderDetail[0].commodityName }} 商品数量：
-            {{ orderDetail[0].commodityNumber }} 商品图：
-            {{ orderDetail[0].commodityImg }} 商品价格：
-            {{ orderDetail[0].commodityPrice }} 订单总计：{{ totalMoney }}
+            订单号：{{ order.orderId }} 订单时间：{{ order.orderBuyerTime }}
+            <p v-if="order.orderState == -1">订单状态：已取消</p>
+            <p v-else-if="order.orderState == 0">订单状态：正在等待商家确认</p>
+            <p v-else-if="order.orderState == 1">订单状态：商家已确认订单</p>
+            <p v-else-if="order.orderState == 2">订单状态：骑手已取到订单</p>
+            <p v-else-if="order.orderState == 3">订单状态：骑手已送达</p>
+            <p v-else-if="order.orderState == 4">订单状态：买家已确认收货</p>
+            <p v-else>订单状态：未知状态</p>
           </div>
-          <!-- <div :v-if=""> -->
-          <el-button size="mini">取消订单</el-button>
-          <el-button size="mini" type="success">确认收货</el-button>
+          <div v-for="(orderDetail, key) in orderDetail" :key="key">
+            <div>
+              商品名: {{ orderDetail[key].commodityName }} 商品数量：
+              {{ orderDetail[key].commodityNumber }} 商品图：
+              {{ orderDetail[key].commodityImg }} 商品价格：
+              {{ orderDetail[key].commodityPrice }} 订单总计：{{ totalMoney }}
+            </div>
+          </div>
+
+          <el-button @click="deleteOrder" size="mini" :disabled="!failState"
+            >删除订单</el-button
+          >
+          <el-popover title="确定要取消订单吗" v-model="visi">
+            <el-button @click="visi = false" size="mini">取消</el-button>
+            <el-button size="mini" @click="fail()" type="primary"
+              >确定</el-button
+            >
+            <el-button
+              size="mini"
+              :disabled="failState"
+              @click="!visi"
+              slot="reference"
+              >取消订单</el-button
+            >
+          </el-popover>
+          <el-popover title="确定收到商品了吗" v-model="visible">
+            <el-button @click="visible = false" size="mini">取消</el-button>
+            <el-button size="mini" @click="success(orderDetail)" type="primary"
+              >确定</el-button
+            >
+            <el-button
+              size="mini"
+              @click="!visible"
+              slot="reference"
+              type="success"
+              :disabled="state"
+              >确认收货</el-button
+            >
+          </el-popover>
+          <div v-if="evaluate">
+               <el-rate v-model="shopScore" show-text> </el-rate>
+              <el-button size="mini">评价</el-button>
+          </div>
+       
         </el-main>
       </el-container>
     </div>
@@ -59,13 +98,20 @@
 </template>
 
 <script>
+import { Message } from "element-ui";
 import api from "@/api/api";
 import topfile from "../topfile.vue";
 export default {
   components: { topfile },
   data() {
     return {
-      activeIndex:"",
+      evaluate:false,
+      shopScore: '',
+      failState: false,
+      state: true,
+      visi: false,
+      visible: false,
+      activeIndex: "",
       orders: [],
       orderDetails: [],
       order: [],
@@ -75,7 +121,85 @@ export default {
       money: "",
     };
   },
+  watch: {
+    order(value) {
+      this.failState = false;
+      this.state = true;
+      if (value[0].orderState == 3) {
+        this.state = false;
+      }
+      if (value[0].orderState == -1) {
+        this.failState = true;
+      }
+      if (value[0].orderState == 4) {
+        this.failState = true;
+       
+      }
+    },
+  },
   methods: {
+    deleteOrder() {
+      console.log(this.order[0].orderId);
+      let a = {
+        orderId: this.order[0].orderId,
+      };
+      this.$confirm("此操作将永久删除该订单, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning",
+      })
+        .then(() => {
+          api.deleteOrder(a).then((response) => {
+            console.log(response);
+            this.$message({
+              type: "success",
+              message: "删除成功!",
+            });
+            this.selectOrder();
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除",
+          });
+        });
+    },
+    success(orderId) {
+      let a = {
+        orderId: orderId[0][0].shoppingOrderId,
+        orderState: 4,
+      };
+      api
+        .updateState(a)
+        .then((response) => {
+          if (response.data.result == 1) {
+            Message.success("收货成功");
+            this.selectOrder();
+          }
+        })
+        .catch((error) => console.log(error));
+      this.visible = false;
+    },
+    fail() {
+      console.log(this.orderDetail);
+      let a = {
+        shopping: this.orderDetail[0],
+        orderId: this.order[0].orderId,
+        orderState: -1,
+      };
+      api
+        .updateState(a)
+        .then((response) => {
+          console.log(response);
+          if (response.data.result == 1) {
+            Message.success("取消订单成功");
+            this.selectOrder();
+          }
+        })
+        .catch((error) => console.log(error));
+      this.visi = false;
+    },
     select(orderId) {
       this.shop = [];
       this.order = [];
@@ -87,8 +211,11 @@ export default {
           this.shop.push(this.shops[this.orders[index].shopId]);
         }
         //当订单商品里的订单编号和点击的订单号相同时把商品放到集合里
+
         if (this.orderDetails[index][0].shoppingOrderId == orderId) {
-          this.orderDetail.push(this.orderDetails[index]);
+          for (let i = 0; i < this.orderDetails[index].length; i++) {
+            this.orderDetail.push(this.orderDetails[index]);
+          }
         }
       }
     },
@@ -96,12 +223,34 @@ export default {
       history.back();
     },
     toShop(shop) {
+      console.log(shop);
+      console.log(this.shops);
       for (const key in this.shops) {
-        if ((this.shops[key] = shop)) {
+        if (this.shops[key] == shop) {
+          console.log(key);
           this.$router.push({ path: "/buyer/shop?shopId=" + key });
           break;
         }
       }
+    },
+    selectOrder() {
+      let params = {
+        orderBuyerId: sessionStorage["userName"],
+      };
+      api
+        .selectOrder(params)
+        .then((response) => {
+          this.orders = response.data.result.orders;
+          this.shops = response.data.result.shops;
+          this.orderDetails = response.data.result.shoppings;
+        })
+        .catch((error) => console.log(error))
+        .finally(() => {
+          this.activeIndex = this.orders[
+            this.orders.length - 1
+          ].orderId.toString();
+          this.select(this.activeIndex);
+        });
     },
   },
   computed: {
@@ -116,22 +265,7 @@ export default {
     },
   },
   mounted() {
-    let params = {
-      orderBuyerId: sessionStorage["userName"],
-    };
-    api
-      .selectOrder(params)
-      .then((response) => {
-        this.orders = response.data.result.orders;
-        this.shops = response.data.result.shops;
-        this.orderDetails = response.data.result.shoppings;
-      })
-      .catch((error) => console.log(error))
-      .finally(() => {
-       this.activeIndex =this.orders[this.orders.length-1].orderId.toString();
-        this.select(this.activeIndex);
-      })
-       
+    this.selectOrder();
   },
 };
 </script>

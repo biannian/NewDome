@@ -82,7 +82,7 @@ export default {
     api
       .queryAll(page)
       .then((res) => {
-        console.log(res);
+
         this.shopList = res.data.result.list;
         this.count = res.data.result.total;
       
@@ -99,7 +99,7 @@ export default {
       this.pageSize=val;
       if (this.queryByNameOff) {
         
-        console.log( "店铺名$",this.IshopName);
+       
         let page = {
           shopName: this.IshopName,
           pageNum: this.indexPage,
@@ -108,14 +108,14 @@ export default {
         api
           .selectShop(page)
           .then((res) => {
-            console.log(res);
+       
             this.shopList = res.data.result.list;
             this.count = res.data.result.total;
-            console.log(shopList);
+         
           })
           .catch((err) => console.log(err));
       } else {
-        console.log(`每页 ${val} 条`);
+      
         let page = {
           pageNum: this.indexPage,
           pageSize: val,
@@ -123,10 +123,10 @@ export default {
         api
           .queryAll(page)
           .then((res) => {
-            console.log(res);
+   
             this.shopList = res.data.result.list;
             this.count = res.data.result.total;
-            console.log(shopList);
+    
           })
           .catch((err) => console.log(err));
       }
@@ -134,7 +134,7 @@ export default {
     handleCurrentChange(val) {
       this.pageNum=val;
       if (this.queryByNameOff) {
-          console.log(`当前页: ${val}`);
+        
       let page = {
         shopName:this.IshopName,
         pageNum: val,
@@ -143,14 +143,14 @@ export default {
       api
         .selectShop(page)
         .then((res) => {
-          console.log(res);
+        
           this.shopList = res.data.result.list;
           this.count = res.data.result.total;
-          console.log(shopList);
+        
         })
         .catch((err) => console.log(err));
       } else {
-           console.log(`当前页: ${val}`);
+       
       let page = {
         pageNum: val,
         pageSize: this.pageSize,
@@ -158,10 +158,10 @@ export default {
       api
         .queryAll(page)
         .then((res) => {
-          console.log(res);
+        
           this.shopList = res.data.result.list;
           this.count = res.data.result.total;
-          console.log(shopList);
+
         })
         .catch((err) => console.log(err));
       }

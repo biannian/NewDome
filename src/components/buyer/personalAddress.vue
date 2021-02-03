@@ -111,7 +111,7 @@ export default {
           api
             .updateAddress(this.ruleForm)
             .then((response) => {
-              console.log(response);
+            
               if (response.data.result == 1) {
                 Message.success("提交成功！正在跳转上个页面...");
                  this.timer = setTimeout(() => {
@@ -140,7 +140,7 @@ export default {
     api
       .getBuyerAddress(accountName)
       .then((response) => {
-        console.log(response.data);
+       
         if (response.data.result) {
              this.ruleForm = response.data.result;
         }

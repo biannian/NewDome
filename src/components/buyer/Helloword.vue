@@ -70,9 +70,9 @@ export default {
   },
   methods: {
     selectShop() {
-      console.log("店铺名",this.shopName);
+   
       this.$refs.Index.queryByNameOff = true;
-      console.log( this.$refs.Index.queryByNameOff);
+  
       let param = {
         pageNum: this.$refs.Index.indexPage,
         pageSize: this.$refs.Index.pageSize,
@@ -81,9 +81,9 @@ export default {
       api
         .selectShop(param)
         .then((Response) => {
-          console.log(Response);
+         
           this.$refs.Index.shopList = Response.data.result.list;
-          console.log(Response.data.result.list);
+      
           this.$refs.Index.count = Response.data.result.total;
         })
         .catch((err) => console.log(err));

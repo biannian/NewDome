@@ -1,19 +1,21 @@
 <template>
   <el-menu
+    router
+    :default-active="$route.path"
     unique-opened
-    @select="handleSelect"
+ 
     active-text-color="#ffd04b"
   >
     <el-submenu index="1">
       <template slot="title">账户管理</template>
-      <el-menu-item index="1-1">
+      <el-menu-item index="/root/accountList">
       账户一览 </el-menu-item
       >
     </el-submenu>
     <el-submenu index="2">
       <template slot="title">商品管理</template>
       <el-menu-item index="2-1">商品审核</el-menu-item>
-      <el-menu-item index="2-2">商品管理</el-menu-item>
+      <el-menu-item index="/root/commodityList">商品管理</el-menu-item>
     </el-submenu>
     <el-submenu index="3">
       <template slot="title">店铺管理</template>

@@ -195,7 +195,7 @@ export default {
     pay() {
       let t = new Date();
       let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
-      console.log(time);
+
           let shop = {
             orderBuyerId: sessionStorage["userName"],
             shopId: this.$route.query.shopId,
@@ -203,7 +203,6 @@ export default {
             orderBuyerTime: time,
             shopping:this.shopping
           };
-          console.log(shop);
       api
         .addOrder(shop)
         .then((response) => {
@@ -273,7 +272,7 @@ export default {
       // let windowH = window.innerHeight; //浏览器窗口高度
       // let h = this.$refs[el][0].$el.offsetHeight; //模块内容高度
       let t = this.$refs[el][0].$el.offsetTop; //模块相对于内容顶部的距离
-      console.log(t);
+ 
       //let top = t - (windowH - h) / 2; //需要滚动到的位置，若改为 t 则滚动到模块顶部位置，此处是滚动到模块相对于窗口垂直居中的位置
       let top = t; //需要滚动到的位置，若改为 t 则滚动到模块顶部位置，此处是滚动到模块相对于窗口垂直居中的位置
       let scrollTop = this.$refs.dishes.$el.scrollTop; //滚动条距离顶部高度
@@ -312,7 +311,7 @@ export default {
       shopId: this.$route.query.shopId,
     };
     api.shopQueryById(shops).then((res) => {
-      console.log(res);
+
       this.shopInfo = res.data.result.shop;
       this.commoditys = res.data.result.shop.commodity;
       for (const iterator of this.commoditys) {

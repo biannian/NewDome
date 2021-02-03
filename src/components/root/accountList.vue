@@ -28,10 +28,10 @@
                 <span v-if="scope.row.accountLimit === 1">
                   <p>买家</p>
                 </span>
-                <span v-if="scope.row.accountLimit === 2">
+                <span v-if="scope.row.accountLimit === 3">
                   <p>卖家</p>
                 </span>
-                <span v-if="scope.row.accountLimit === 3">
+                <span v-if="scope.row.accountLimit === 2">
                   <p>骑手</p>
                 </span>
                 <span v-if="scope.row.accountLimit === 4">

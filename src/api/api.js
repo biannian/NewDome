@@ -41,6 +41,12 @@ export default{
 	addOrder(params){
 		return http.post(`${resquest}/Order/addOrder.do`,params)
 	},
+	deleteOrder(params){
+		return http.get(`${resquest}/Order/deleteOrder.do`,params)
+	},
+	updateState(params){
+		return http.post(`${resquest}/Order/updateState.do`,params)
+	},
 	selectOrder(params){
 		return http.get(`${resquest}/Order/selectOrder.do`,params)
 	},

@@ -8,11 +8,10 @@ import shop from '@/components/buyer/shop'
 import accountIndex from '@/components/root/accountIndex'
 import commodityList from '@/components/root/commodityList'
 import accountList from '@/components/root/accountList'
-import shopList from '@/components/seller/shopList'
+import sellerShopList from '@/components/seller/sellerShopList'
 import personalAddress from '@/components/buyer/personalAddress'
 import chat from '@/components/buyer/chat'
 import order from '@/components/buyer/order'
-
 import informationEdit from '@/components/buyer/informationEdit'
 
 
@@ -51,9 +50,9 @@ export const routes = [
     name: 'accountList',
     component: accountList,
   }, {
-    path: '/seller/shopList',
-    name: 'shopList',
-    component: shopList,
+    path: '/seller/sellerShopList',
+    name: 'sellerShopList',
+    component: sellerShopList,
   }, {
     path: '/buyer/personalAddress',
     name: 'personalAddress',

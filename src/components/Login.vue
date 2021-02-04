@@ -73,7 +73,6 @@ export default {
             sessionStorage["userName"] = this.accountName;
             console.log(response);
             if (theCode == "200") {
-            
               api
                 .getLimit()
                 .then((response) => {
@@ -86,8 +85,7 @@ export default {
                         Message.error("页面尚未完成");
                       break;
                     case 3:
-                         this.$router.push({ path: "/seller/sellerShopList" });
-                  
+                         this.$router.push({ path: "/seller/sellerIndex" });
                       break;
                     case 4:
                     this.$router.push({ path: "/root/accountIndex"});

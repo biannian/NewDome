@@ -1,24 +1,24 @@
 <template>
   <el-menu
     unique-opened
-    @select="handleSelect"
+    router
+    :default-active="$route.path"
     active-text-color="#ffd04b"
   >
-    <el-submenu index="1">
-      <template slot="title">店铺管理</template>
-      <el-menu-item index="1-1">
-      账户一览 </el-menu-item
-      >
+      <el-submenu index="2">
+      <template slot="title">订单管理</template>
+      <el-menu-item index="/seller/sellerOrder">订单确定</el-menu-item>
+      <el-menu-item index="/seller/sellerOrderEdit">订单管理</el-menu-item>
     </el-submenu>
-    <el-submenu index="2">
+    <el-submenu index="4">
       <template slot="title">商品管理</template>
-      <el-menu-item index="2-1">商品新增</el-menu-item>
-      <el-menu-item index="2-2">商品管理</el-menu-item>
+      <el-menu-item index="/seller/sellerCommodityAdd">商品新增</el-menu-item>
+      <el-menu-item index="/seller/sellerCommodityList">商品管理</el-menu-item>
     </el-submenu>
     <el-submenu index="3">
-      <template slot="title">个人管理</template>
-      <el-menu-item index="3-1">个人信息</el-menu-item>
-      <el-menu-item index="3-2">营业信息</el-menu-item>
+      <template slot="title">店铺管理</template>
+      <el-menu-item index="/seller/sellerAccountEdit">个人信息</el-menu-item>
+      <el-menu-item index="/seller/sellerShopEdit">店铺信息</el-menu-item>
     </el-submenu>
     
   </el-menu>

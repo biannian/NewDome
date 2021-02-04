@@ -13,10 +13,10 @@
           separator-class="el-icon-arrow-right"
           style="margin-top: 20px; margin-left: 20px"
         >
-          <el-breadcrumb-item :to="{ path: '/root/accountIndex' }"
+          <el-breadcrumb-item :to="{ path: '/seller/sellerIndex' }"
             >首页</el-breadcrumb-item
-          >
-          <el-breadcrumb-item>账户一览</el-breadcrumb-item>
+          > 
+          <el-breadcrumb-item>个人信息</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
         

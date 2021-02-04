@@ -32,8 +32,8 @@ export default{
 	updatePassword(params){
 		return http.get(`${resquest}/Login/updatePassword.do`,params)
 	},
-	queryAllCommodity(){
-		return http.get(`${resquest}/shop/queryAllCommodity.do`)
+	queryAllCommodity(params){
+		return http.get(`${resquest}/shop/queryAllCommodity.do`,params)
 	},
 	delectCommodity(params){
 		return http.get(`${resquest}/shop/delectCommodity.do`,params)
@@ -56,5 +56,7 @@ export default{
 	updateAddress(params){
 		return http.post(`${resquest}/Buyer/updateAddress.do`,params)
 	},
-
+	selectMenu(params){
+		return http.post(`${resquest}/shop/selectMenu.do`,params)
+	},
 }

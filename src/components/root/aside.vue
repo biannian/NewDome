@@ -38,15 +38,6 @@ export default {
     };
   },
   methods: {
-    handleSelect(key, keyPath) {
-      switch(key){
-        case "1-1" : this.$router.push({ path: "/root/accountList"});
-        break;
-        case "2-2" : this.$router.push({ path: "/root/commodityList"});
-         break;
-      }
-        
-    },
   },
 };
 </script>

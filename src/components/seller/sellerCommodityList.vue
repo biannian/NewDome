@@ -2,17 +2,18 @@
   <div>
     <el-container style="height: 650px; border: 1px solid #eee">
       <el-aside width="200px" style="background-color: rgb(238, 241, 246)">
-        <Aside></Aside>
+        <seller-aside></seller-aside>
       </el-aside>
       <el-container>
         <el-header>
-          <Header></Header>
+          <seller-header></seller-header>
         </el-header>
+
         <el-breadcrumb
           separator-class="el-icon-arrow-right"
           style="margin-top: 20px; margin-left: 20px"
         >
-          <el-breadcrumb-item :to="{ path: '/root/accountIndex' }"
+          <el-breadcrumb-item :to="{ path: '/seller/sellerIndex' }"
             >首页</el-breadcrumb-item
           >
           <el-breadcrumb-item>商品管理</el-breadcrumb-item>
@@ -23,14 +24,19 @@
             </el-table-column>
             <el-table-column prop="commodityImg" label="商品图" width="200">
             </el-table-column>
-            <el-table-column prop="commodityName" label="商品名" width="120">
+            <el-table-column prop="commodityName" label="商品名" width="140">
             </el-table-column>
-                <el-table-column prop="shopName" label="所属店铺" width="120">
+            <el-table-column prop="commodityPrice" label="商品价格" width="140">
             </el-table-column>
-            <el-table-column prop="shopMenuName" label="种类" width="120">
+            <el-table-column prop="commodityNumber" label="商品库存" width="140">
+            </el-table-column>
+            <el-table-column prop="shopMenuName" label="种类" width="140">
             </el-table-column>
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
+                <el-button type="text" size="medium" @click="edit(scope.row)"
+                  >修改
+                </el-button>
                 <el-popover placement="top" width="160">
                   <p>确定要删除此商品吗？</p>
                   <div style="text-align: right; margin: 0">
@@ -53,37 +59,46 @@
     </el-container>
   </div>
 </template>
-
 <script>
 import api from "@/api/api";
-import Aside from "./aside.vue";
-import Header from "./header.vue";
+import SellerAside from "./sellerAside.vue";
+import SellerHeader from "./sellerHeader.vue";
+import { Message } from "element-ui";
 export default {
-  components: { Aside, Header },
+  components: { SellerAside, SellerHeader },
+  methods: {},
   data() {
     return {
       commodityList: [],
     };
   },
-  mounted() {
-    api
-      .queryAllCommodity()
-      .then((res) => {
-        console.log(res);
-        this.commodityList = res.data.result;
-      })
-      .catch((err) => console.log(err));
-  },
   methods: {
-    delectCommodity(row) {
-      let params = {
-        commodityId: row.commodityId,
+    edit(commodity) {
+      this.$router.push({ path: "/seller/sellerCommodityEdit", query: commodity });
+    },
+    selectCommodity() {
+      if (
+        sessionStorage["accountUserId"] == null ||
+        sessionStorage["accountUserId"] == ""
+      ) {
+        Message.warning("获取数据失败，请重新登录");
+        return false;
+      }
+      let a = {
+        commodityShopId: sessionStorage["accountUserId"],
       };
       api
-        .delectCommodity(params)
+        .queryAllCommodity(a)
+        .then((res) => {
+          console.log(res);
+          this.commodityList = res.data.result;
+        })
         .catch((err) => console.log(err));
-      location.reload();
     },
+  },
+
+  mounted() {
+    this.selectCommodity();
   },
 };
 </script>

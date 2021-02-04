@@ -45,6 +45,7 @@
 </template>
 
 <script>
+import api from "@/api/api";
 const axios = require("axios");
 import { Alert, Message } from "element-ui";
 export default {
@@ -90,9 +91,25 @@ export default {
             sessionStorage["userName"] = this.accountName;
             Message.success("注册成功,正在跳转首页...");
             this.timer = setTimeout(() => {
-              //设置延迟执行
-              this.$router.push({ path: "/buyer/Helloword" });
-            }, 1000);
+              api
+                .getLimit()
+                .then((response) => {
+                  sessionStorage["accountUserId"]= response.data.result.accountUserId;
+                  switch (response.data.result.accountLimit) {
+                    case 1:
+                      this.$router.push({ path: "/buyer/Helloword" });
+                      break;
+                    case 2:
+                        Message.error("页面尚未完成");
+                      break;
+                    case 3:
+                         this.$router.push({ path: "/seller/sellerIndex" });
+                  
+                      break;
+                  }
+                })
+                .catch((err) => console.log(err));
+            }, 500);
           } else {
             Message.error("注册失败");
           }

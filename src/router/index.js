@@ -8,12 +8,19 @@ import shop from '@/components/buyer/shop'
 import accountIndex from '@/components/root/accountIndex'
 import commodityList from '@/components/root/commodityList'
 import accountList from '@/components/root/accountList'
-import sellerShopList from '@/components/seller/sellerShopList'
+import sellerShopEdit from '@/components/seller/sellerShopEdit'
 import personalAddress from '@/components/buyer/personalAddress'
 import chat from '@/components/buyer/chat'
 import order from '@/components/buyer/order'
 import informationEdit from '@/components/buyer/informationEdit'
+import sellerIndex from '@/components/seller/sellerIndex'
+import sellerOrder from '@/components/seller/sellerOrder'
+import sellerAccountEdit from '@/components/seller/sellerAccountEdit'
+import sellerOrderEdit from '@/components/seller/sellerOrderEdit'
 
+import sellerCommodityEdit from '@/components/seller/sellerCommodityEdit'
+import sellerCommodityAdd from '@/components/seller/sellerCommodityAdd'
+import sellerCommodityList from '@/components/seller/sellerCommodityList'
 
 Vue.use(Router)
 export const routes = [
@@ -50,9 +57,9 @@ export const routes = [
     name: 'accountList',
     component: accountList,
   }, {
-    path: '/seller/sellerShopList',
-    name: 'sellerShopList',
-    component: sellerShopList,
+    path: '/seller/sellerShopEdit',
+    name: 'sellerShopEdit',
+    component: sellerShopEdit,
   }, {
     path: '/buyer/personalAddress',
     name: 'personalAddress',
@@ -69,8 +76,37 @@ export const routes = [
     path: '/buyer/informationEdit',
     name: 'informationEdit',
     component: informationEdit,
+  }, {
+    path: '/seller/sellerIndex',
+    name: 'sellerIndex',
+    component: sellerIndex,
+  }, {
+    path: '/seller/sellerOrder',
+    name: 'sellerOrder',
+    component: sellerOrder,
+  }, {
+    path: '/seller/sellerAccountEdit',
+    name: 'sellerAccountEdit',
+    component: sellerAccountEdit,
+  }, {
+    path: '/seller/sellerOrderEdit',
+    name: 'sellerOrderEdit',
+    component: sellerOrderEdit,
   }
-
+  , {
+    path: '/seller/sellerCommodityAdd',
+    name: 'sellerCommodityAdd',
+    component: sellerCommodityAdd,
+  }, {
+    path: '/seller/sellerCommodityList',
+    name: 'sellerCommodityList',
+    component: sellerCommodityList,
+  }
+  , {
+    path: '/seller/sellerCommodityEdit',
+    name: 'sellerCommodityEdit',
+    component: sellerCommodityEdit,
+  }
 ]
 const router = new Router({
   routes

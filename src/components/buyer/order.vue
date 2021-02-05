@@ -31,7 +31,7 @@
         </el-aside>
         <el-main>
           <div class="inf" v-for="(shop, index) in shop" :key="'inf-' + index">
-            <p @click="toShop(shop)">{{ shop }}</p>
+            <a style="font-size:20px" @click="toShop(shop)">{{ shop }}</a>
           </div>
           <div
             class="info"
@@ -39,6 +39,18 @@
             :key="'info-' + index"
           >
             订单号：{{ order.orderId }} 订单时间：{{ order.orderBuyerTime }}
+ <!-- <el-timeline :reverse="reverse">
+ 
+ <el-timeline-item
+      v-for="(orderBuyerTime, index) in 5"
+      :key="index"
+     :timestamp="order.orderBuyerTime"
+ >
+      {{orderBuyerTime}}
+    </el-timeline-item>
+ </el-timeline> -->
+
+
             <p v-if="order.orderState == -1">订单状态：已取消</p>
             <p v-else-if="order.orderState == 0">订单状态：正在等待商家确认</p>
             <p v-else-if="order.orderState == 1">订单状态：商家已确认订单</p>
@@ -49,13 +61,21 @@
           </div>
           <div v-for="(orderDetail, key) in orderDetail" :key="key">
             <div>
-              商品名: {{ orderDetail[key].commodityName }} 商品数量：
-              {{ orderDetail[key].commodityNumber }} 商品图：
-              {{ orderDetail[key].commodityImg }} 商品价格：
-              {{ orderDetail[key].commodityPrice }} 订单总计：{{ totalMoney }}
+              商品名: {{ orderDetail[key].commodityName }} 
+               商品图：
+                <img
+                  style="width: 110px; height: 110px"
+                  :src=" orderDetail[key].commodityImg"
+                 
+                >
+              商品数量：
+              {{ orderDetail[key].commodityNumber }}
+           商品价格：
+              {{ orderDetail[key].commodityPrice }} 
             </div>
+        
           </div>
-
+    订单总计：{{ totalMoney }} <br>
           <el-button @click="deleteOrder" size="mini" :disabled="!failState"
             >删除订单</el-button
           >

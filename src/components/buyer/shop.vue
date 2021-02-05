@@ -3,12 +3,20 @@
     <el-container>
       <el-header>
         <div style="width: 15%; float: left; margin-top: 50px">
-          <el-page-header @back="goBack" content="店铺详情" ></el-page-header>
+          <el-page-header @back="goBack" content="店铺详情"></el-page-header>
         </div>
-        <div style="width: 30%; color:#409EFF; margin-top:3%;float: left; font-size: 25px;">   
-        {{shopName}}
+        <div
+          style="
+            width: 30%;
+            color: #409eff;
+            margin-top: 3%;
+            float: left;
+            font-size: 25px;
+          "
+        >
+          {{ shopName }}
         </div>
-        <div style="width: 50%; float: right;margin-right:20px">
+        <div style="width: 50%; float: right; margin-right: 20px">
           <Topfile></Topfile>
         </div>
       </el-header>
@@ -46,9 +54,10 @@
               >
                 <el-card :body-style="{ padding: '10px' }" shadow="hover">
                   <img
-                    src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+                    :src="commodity.commodityImg"
                     class="image"
-                    style="border-radius: 5px"
+
+                    style="border-radius: 5px;width: 180px; height: 180px"
                   />
                   <div style="font-size: 20px">
                     <span>{{ commodity.commodityName }} </span>
@@ -93,8 +102,8 @@
           <el-card :body-style="{ padding: '0px' }" shadow="hover">
             <div style="float: left">
               <img
-                style="width: 70px"
-                src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+                style="width: 70px;height:70px"
+              :src="commodity.commodityImg"
               />
             </div>
             <div>
@@ -165,7 +174,7 @@ export default {
   components: { Topfile, Index },
   data() {
     return {
-      shopName:"",
+      shopName: "",
       shopMenu: "",
       curActive: "",
       indexId: "",
@@ -190,36 +199,47 @@ export default {
       return sum;
     },
   },
-
   methods: {
     pay() {
-      let t = new Date();
-      let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
-
-          let shop = {
-            orderBuyerId: sessionStorage["userName"],
-            shopId: this.$route.query.shopId,
-            orderState: 0,
-            orderBuyerTime: time,
-            shopping:this.shopping
-          };
+      let accountUserId = {
+        accountUserId: sessionStorage["accountUserId"],
+      };
       api
-        .addOrder(shop)
+        .selectAddress(accountUserId)
         .then((response) => {
-         if(response.data.code == '200')
-         {
-             Message.success("支付成功");
-             
-               this.timer = setTimeout(() => {
-              //设置延迟执行
-              this.$router.push({ path: "/buyer/order" });
-            }, 800);
-         }else{
-             Message.error("购买失败");
-         }
+          if (response.data.result) {
+            let t = new Date();
+            let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
+
+            let shop = {
+              orderBuyerId: sessionStorage["userName"],
+              shopId: this.$route.query.shopId,
+              orderState: 0,
+              orderBuyerTime: time,
+              shopping: this.shopping,
+            };
+            api
+              .addOrder(shop)
+              .then((response) => {
+                if (response.data.code == "200") {
+                  Message.success("支付成功");
+
+                  this.timer = setTimeout(() => {
+                    //设置延迟执行
+                    this.$router.push({ path: "/buyer/order" });
+                  }, 800);
+                } else {
+                  Message.error("购买失败");
+                }
+              })
+              .catch((error) => console.log(error));
+          } else {
+            Message.warning("请先添加收货地址再下单");
+          }
         })
-        .catch((error) => console.log(error));
-    
+        .catch((error) => {
+          console.error(error);
+        });
     },
     handleSelect() {},
 
@@ -272,7 +292,7 @@ export default {
       // let windowH = window.innerHeight; //浏览器窗口高度
       // let h = this.$refs[el][0].$el.offsetHeight; //模块内容高度
       let t = this.$refs[el][0].$el.offsetTop; //模块相对于内容顶部的距离
- 
+
       //let top = t - (windowH - h) / 2; //需要滚动到的位置，若改为 t 则滚动到模块顶部位置，此处是滚动到模块相对于窗口垂直居中的位置
       let top = t; //需要滚动到的位置，若改为 t 则滚动到模块顶部位置，此处是滚动到模块相对于窗口垂直居中的位置
       let scrollTop = this.$refs.dishes.$el.scrollTop; //滚动条距离顶部高度
@@ -311,7 +331,6 @@ export default {
       shopId: this.$route.query.shopId,
     };
     api.shopQueryById(shops).then((res) => {
-
       this.shopInfo = res.data.result.shop;
       this.commoditys = res.data.result.shop.commodity;
       for (const iterator of this.commoditys) {

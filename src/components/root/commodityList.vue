@@ -21,7 +21,15 @@
           <el-table :data="commodityList" border>
             <el-table-column fixed prop="commodityId" label="编号" width="100">
             </el-table-column>
-            <el-table-column prop="commodityImg" label="商品图" width="200">
+            <el-table-column label="商品图" width="200">
+                   <template slot-scope="scope">
+                <img
+                  style="width: 110px; height: 110px"
+                  :src="scope.row.commodityImg"
+                 
+                >
+                　　</template
+              >
             </el-table-column>
             <el-table-column prop="commodityName" label="商品名" width="120">
             </el-table-column>
@@ -42,6 +50,7 @@
                     >
                   </div>
                   <el-button slot="reference" type="text" size="medium"
+                  
                     >删除</el-button
                   >
                 </el-popover>

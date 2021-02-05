@@ -59,4 +59,22 @@ export default{
 	selectMenu(params){
 		return http.post(`${resquest}/shop/selectMenu.do`,params)
 	},
+	selectAddress(params){
+		return http.get(`${resquest}/Login/selectAddress.do`,params)
+	},
+	pictureAdd(params){
+		return http.post(`${resquest}/shop/pictureAdd.do`,params)
+	},
+	commodityAdd(params){
+		return http.post(`${resquest}/shop/commodityAdd.do`,params)
+	},
+	queryShopName(params){
+		return http.get(`${resquest}/shop/queryShopName.do`,params)
+	},
+	pictureDelete(params){
+		return http.get(`${resquest}/shop/pictureDelete.do`,params)
+	},
+	addMenu(params){
+		return http.get(`${resquest}/shop/addMenu.do`,params)
+	},
 }

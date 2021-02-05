@@ -39,57 +39,36 @@
               prop="commodityImg"
               :rules="[{ required: true, message: '商品图不能为空' }]"
             >
-
-
               <el-upload
-                action="#"
+                action
+                ref="upload"
                 list-type="picture-card"
+                :on-change="handleChange"
+                :on-preview="handlePictureCardPreview"
                 :auto-upload="false"
+                :limit="1"
+                :before-remove="handleRemove"
+                :http-request="upload"
               >
-                <i slot="default" class="el-icon-plus"></i>
-                <div slot="file" slot-scope="{ file }">
-                  <img
-                    class="el-upload-list__item-thumbnail"
-                    :src="file.url"
-                    alt=""
-                  />
-                  <span class="el-upload-list__item-actions">
-                    <span
-                      class="el-upload-list__item-preview"
-                      @click="handlePictureCardPreview(file)"
-                    >
-                      <i class="el-icon-zoom-in"></i>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleDownload(file)"
-                    >
-                      <i class="el-icon-download"></i>
-                    </span>
-                    <span
-                      v-if="!disabled"
-                      class="el-upload-list__item-delete"
-                      @click="handleRemove(file)"
-                    >
-                      <i class="el-icon-delete"></i>
-                    </span>
-                  </span>
-                </div>
+                <i class="el-icon-plus"></i>
               </el-upload>
-        
-            
-            
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="url" alt="" />
+              </el-dialog>
+              <p style="font-size: 13px">只能上传jpg/png文件，且不超过1张</p>
             </el-form-item>
-
 
             <el-form-item
               label="商品种类"
               prop="commodityMenuId"
-              :rules="[{ required: true, message: '手机号不能为空' }]"
+              :rules="[{ required: true, message: '商品种类不能为空' }]"
             >
-              <el-col :span="6">
-                <el-select v-model="Form.commodityMenuId" placeholder="请选择">
+              <el-col :span="7">
+                <el-select
+                  style="float: left"
+                  v-model="Form.commodityMenuId"
+                  placeholder="请选择"
+                >
                   <el-option
                     v-for="item in menus"
                     :key="item.shopMenuId"
@@ -98,26 +77,45 @@
                   >
                   </el-option>
                 </el-select>
+                <el-button
+                 style="float:right;"
+                  type="primary"
+                  @click="addMenu"
+                  icon="el-icon-plus"
+                  circle
+                ></el-button>
               </el-col>
             </el-form-item>
 
             <el-form-item
               label="商品库存"
               prop="commodityNumber"
-              :rules="[{ required: true, message: '商品库存不能为空' }]"
+              :rules="[
+                { required: true, message: '商品库存不能为空' },
+                { type: 'number', message: '商品库存必须为数字值' },
+              ]"
             >
               <el-col :span="5">
-                <el-input type="text" v-model="Form.commodityNumber"></el-input>
+                <el-input
+                  type="text"
+                  v-model.number="Form.commodityNumber"
+                ></el-input>
               </el-col>
             </el-form-item>
 
             <el-form-item
               label="商品价格"
               prop="commodityPrice"
-              :rules="[{ required: true, message: '商品价格不能为空' }]"
+              :rules="[
+                { required: true, message: '商品价格不能为空' },
+                { type: 'number', message: '商品价格必须为数字值' },
+              ]"
             >
               <el-col :span="5">
-                <el-input type="text" v-model="Form.commodityPrice"></el-input>
+                <el-input
+                  type="text"
+                  v-model.number="Form.commodityPrice"
+                ></el-input>
               </el-col>
             </el-form-item>
 
@@ -136,23 +134,88 @@
 <script>
 import api from "@/api/api";
 import SellerAside from "./sellerAside.vue";
+import { Message } from "element-ui";
 import SellerHeader from "./sellerHeader.vue";
 export default {
   components: { SellerAside, SellerHeader },
   methods: {},
   data() {
     return {
+      dialogVisible: false,
+      url: "",
+      pictrue: "",
       menus: [],
       Form: {
         commodityImg: "",
         commodityMenuId: "",
         commodityName: "",
         commodityNumber: "",
+        commodityShopId: "",
         commodityPrice: "",
       },
     };
   },
   methods: {
+    addMenu(){
+      
+    },
+    upload() {
+      Message.info("等待图片上传");
+      let formData = new FormData();
+      formData.append("picture", this.pictrue.raw);
+      api
+        .pictureAdd(formData)
+        .then((res) => {
+          this.Form.commodityImg = res.data.result;
+          Message.success("图片上传成功");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    handleChange(file) {
+      this.pictrue = file;
+      this.$refs.upload.submit();
+    },
+    handleRemove() {
+      let a = {
+        path: this.Form.commodityImg,
+      };
+      api.pictureDelete(a).then((res) => {
+        console.log(res);
+        if (res.data.code == 200) {
+          Message.success("删除成功");
+          this.Form.commodityImg = "";
+        } else {
+          Message.success("删除失败，请重试");
+        }
+      });
+    },
+    handlePictureCardPreview(file) {
+      this.url = file.url;
+      this.dialogVisible = true;
+    },
+    submitForm(formName) {
+      this.Form.commodityShopId = sessionStorage["shopId"];
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          api.commodityAdd(this.Form).then((res) => {
+            if (res.data.result == 1) {
+              location.reload();
+               Message.success("成功");
+            } else {
+              Message.error("新增失败！");
+            }
+          });
+        } else {
+          Message.error("新增失败！");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
     selectMenu() {
       api
         .selectMenu()
@@ -162,10 +225,6 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
-    handleClick(row) {
-      // let params = row;
-      // this.$router.push({ path: "/root/accountEdit", params });
     },
   },
 
@@ -184,4 +243,5 @@ export default {
 .el-aside {
   color: #333;
 }
+
 </style>

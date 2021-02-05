@@ -13,14 +13,12 @@
     </el-container>
     <el-container>
       <el-main style="margin-top:2%;margin-left:3%">
-
         <el-form
           :model="ruleForm"
           ref="ruleForm"
           label-width="100px"
           class="demo-ruleForm"
         >
-        
           <el-form-item
             label="姓名"
             prop="buyerName"
@@ -53,7 +51,6 @@
           >
              <el-col :span="6">
             <el-input
-              type="age"
               v-model.number="ruleForm.buyerTel"
               autocomplete="off"
             ></el-input>

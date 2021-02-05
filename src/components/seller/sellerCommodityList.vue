@@ -22,13 +22,25 @@
           <el-table :data="commodityList" border>
             <el-table-column fixed prop="commodityId" label="编号" width="100">
             </el-table-column>
-            <el-table-column prop="commodityImg" label="商品图" width="200">
+            <el-table-column label="商品图" width="200">
+              <template slot-scope="scope">
+                <img
+                  style="width: 140px; height: 110px"
+                  :src="scope.row.commodityImg"
+                 
+                >
+                　　</template
+              >
             </el-table-column>
             <el-table-column prop="commodityName" label="商品名" width="140">
             </el-table-column>
             <el-table-column prop="commodityPrice" label="商品价格" width="140">
             </el-table-column>
-            <el-table-column prop="commodityNumber" label="商品库存" width="140">
+            <el-table-column
+              prop="commodityNumber"
+              label="商品库存"
+              width="140"
+            >
             </el-table-column>
             <el-table-column prop="shopMenuName" label="种类" width="140">
             </el-table-column>
@@ -69,12 +81,25 @@ export default {
   methods: {},
   data() {
     return {
+        fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
       commodityList: [],
     };
   },
   methods: {
     edit(commodity) {
-      this.$router.push({ path: "/seller/sellerCommodityEdit", query: commodity });
+      this.$router.push({
+        path: "/seller/sellerCommodityEdit",
+        query: commodity,
+      });
+    },
+     delectCommodity(row) {
+      let params = {
+        commodityId: row.commodityId,
+      };
+      api
+        .delectCommodity(params)
+        .catch((err) => console.log(err));
+      location.reload();
     },
     selectCommodity() {
       if (

@@ -50,6 +50,11 @@
               prop="commodityImg"
               :rules="[{ required: true, message: '商品图不能为空' }]"
             >
+              <!-- <img
+                  style="width: 110px; height: 110px"
+                  :src="scope.row.commodityImg"
+                 
+                > -->
               <el-radio-group v-model="Form.commodityImg">
                 <el-radio :label="true">男</el-radio>
               </el-radio-group>
@@ -62,6 +67,7 @@
               <el-col :span="6">
                 <el-select v-model="Form.commodityMenuId" placeholder="请选择">
                   <el-option
+                  
                     v-for="item in menus"
                     :key="item.shopMenuId"
                     :label="item.shopMenuName"

@@ -6,6 +6,8 @@
 </template>
 
 <script>
+
+import api from "@/api/api";
 export default {
   data() {
     return {
@@ -20,6 +22,16 @@ export default {
   },
 
   mounted() {
+        api
+      .getLimit()
+      .then((response) => {
+                this.userName =response.data.result.accountName
+  
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
     this.userName = sessionStorage["userName"];
   },
 };

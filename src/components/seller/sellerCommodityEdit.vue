@@ -50,24 +50,36 @@
               prop="commodityImg"
               :rules="[{ required: true, message: '商品图不能为空' }]"
             >
-              <!-- <img
-                  style="width: 110px; height: 110px"
-                  :src="scope.row.commodityImg"
-                 
-                > -->
-              <el-radio-group v-model="Form.commodityImg">
-                <el-radio :label="true">男</el-radio>
-              </el-radio-group>
+             <img width="150px" :src="Form.commodityImg" />
+              <el-upload
+              
+                action
+                ref="upload"
+                list-type="picture-card"
+                :on-change="handleChange"
+                :on-preview="handlePictureCardPreview"
+                :auto-upload="false"
+                :limit="1"
+                :before-remove="handleRemove"
+                :http-request="upload"
+              >
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="url" />
+              </el-dialog>
+              <p style="font-size: 13px">只能上传jpg/png文件，且不超过1张</p>
+
+
             </el-form-item>
             <el-form-item
               label="商品种类"
               prop="commodityMenuId"
-              :rules="[{ required: true, message: '手机号不能为空' }]"
+              :rules="[{ required: true, message: '商品种类不能为空' }]"
             >
               <el-col :span="6">
-                <el-select v-model="Form.commodityMenuId" placeholder="请选择">
+                <el-select v-model="Form.shopMenuName" placeholder="请选择" filterable>
                   <el-option
-                  
                     v-for="item in menus"
                     :key="item.shopMenuId"
                     :label="item.shopMenuName"
@@ -112,6 +124,8 @@
   </div>
 </template>
 <script>
+
+import { Message } from "element-ui";
 import api from "@/api/api";
 import SellerAside from "./sellerAside.vue";
 import SellerHeader from "./sellerHeader.vue";
@@ -120,6 +134,8 @@ export default {
   methods: {},
   data() {
     return {
+      dialogVisible: false,
+      url: "",
       menus:[],
       Form: {
         commodityId: "",
@@ -132,10 +148,55 @@ export default {
     };
   },
   methods: {
+    upload() {
+      Message.info("等待图片上传");
+      let formData = new FormData();
+      formData.append("picture", this.pictrue.raw);
+      api
+        .pictureAdd(formData)
+        .then((res) => {
+          console.log(res);
+          this.Form.commodityImg = res.data.result;
+          Message.success("图片上传成功");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
+    },
+    handleChange(file) {
+      this.pictrue = file;
+      this.$refs.upload.submit();
+    },
+    handleRemove() {
+      let a = {
+        path: this.Form.commodityImg,
+      };
+      api.pictureDelete(a).then((res) => {
+        if (res.data.code == 200) {
+          Message.success("删除成功");
+          this.Form.commodityImg = "";
+        } else {
+          Message.error("删除失败，请重试");
+        }
+      });
+    },
+    handlePictureCardPreview(file) {
+      this.url = file.url;
+      this.dialogVisible = true;
+    },
+
      submitForm(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {
-           Message.error("成功");
+     console.log(this.Form);
+     api
+     .commodityEdit(this.Form)
+     .then((res)=>{
+       if (res.data.result == 1) {
+              Message.success("成功");
+             history.back();
+       }
+     })
         } else {
          Message.error("修改失败！");
           return false;
@@ -157,7 +218,7 @@ export default {
   },
 
   mounted() {
-    console.log(this.$route);
+ 
    // this.Form.commodityMenuId = this.$route.query.shopMenuName;
      this.Form = this.$route.query;
     this.selectMenu();

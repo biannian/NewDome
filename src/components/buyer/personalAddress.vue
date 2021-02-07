@@ -12,7 +12,7 @@
       </el-header>
     </el-container>
     <el-container>
-      <el-main style="margin-top:2%;margin-left:3%">
+      <el-main style="margin-top: 2%; margin-left: 3%">
         <el-form
           :model="ruleForm"
           ref="ruleForm"
@@ -27,8 +27,8 @@
               { max: 10, message: '姓名为10个字符以内' },
             ]"
           >
-          <el-col :span="3">
-            <el-input v-model="ruleForm.buyerName"></el-input>
+            <el-col :span="3">
+              <el-input v-model="ruleForm.buyerName"></el-input>
             </el-col>
           </el-form-item>
           <el-form-item
@@ -49,12 +49,12 @@
               { type: 'number', message: '手机号必须为数字值' },
             ]"
           >
-             <el-col :span="6">
-            <el-input
-              v-model.number="ruleForm.buyerTel"
-              autocomplete="off"
-            ></el-input>
-             </el-col>
+            <el-col :span="6">
+              <el-input
+                v-model.number="ruleForm.buyerTel"
+                autocomplete="off"
+              ></el-input>
+            </el-col>
           </el-form-item>
           <el-form-item
             label="收货地址"
@@ -63,11 +63,12 @@
               { required: true, message: '收货地址不能为空' },
               { min: 6, max: 25, message: '收货地址至少为6个汉字' },
             ]"
-          >   <el-col :span="8">
-            <el-input
-              type="textarea"
-              v-model="ruleForm.buyerAddress"
-            ></el-input>
+          >
+            <el-col :span="8">
+              <el-input
+                type="textarea"
+                v-model="ruleForm.buyerAddress"
+              ></el-input>
             </el-col>
           </el-form-item>
           <el-form-item>
@@ -108,12 +109,11 @@ export default {
           api
             .updateAddress(this.ruleForm)
             .then((response) => {
-            
               if (response.data.result == 1) {
                 Message.success("提交成功！正在跳转上个页面...");
-                 this.timer = setTimeout(() => {
+                this.timer = setTimeout(() => {
                   history.back();
-            }, 1000);
+                }, 1000);
               } else {
                 Message.error("提交失败！");
               }
@@ -130,19 +130,25 @@ export default {
     },
   },
   mounted() {
-    this.ruleForm.buyerAccountName = sessionStorage["userName"];
-    let accountName = {
-      accountName: sessionStorage["userName"],
-    };
     api
-      .getBuyerAddress(accountName)
+      .getLimit()
       .then((response) => {
-       
-        if (response.data.result) {
-             this.ruleForm = response.data.result;
-        }
+        this.ruleForm.buyerAccountName = response.data.result.accountName;
+        let a = {
+          accountName: response.data.result.accountName,
+        };
+        api
+          .getBuyerAddress(a)
+          .then((response) => {
+            if (response.data.result) {
+              this.ruleForm = response.data.result;
+            }
+          })
+          .catch((error) => console.log(error));
       })
-      .catch((error) => console.log(error));
+      .catch((err) => {
+        console.log(err);
+      });
   },
 };
 </script>

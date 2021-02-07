@@ -2,10 +2,11 @@
   <div>
     <el-row>
       <el-col :span="6" v-for="(shop, index) in shopList" :key="index">
-        <el-card :body-style="{ padding: '0px'}" shadow="hover">
+        <el-card :body-style="{ padding: '0px' }" shadow="hover">
           <img
+            style="float: left; width: 150px"
             src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
-            class="image" 
+            class="image"
           />
 
           <div class="card" @click="selectShop(shop.shopId)">
@@ -36,7 +37,7 @@
             <el-button
               type="text"
               @click="selectShop(shop.shopId)"
-              class="button"
+              style="padding: 0; float: left"
               >进入店铺</el-button
             >
           </div>
@@ -61,9 +62,9 @@
 <script>
 import api from "@/api/api";
 export default {
-  name:"index",
-  props:{
-    IshopName:String,
+  name: "index",
+  props: {
+    IshopName: String,
   },
   data() {
     return {
@@ -82,10 +83,8 @@ export default {
     api
       .queryAll(page)
       .then((res) => {
-
         this.shopList = res.data.result.list;
         this.count = res.data.result.total;
-      
       })
       .catch((err) => console.log(err));
     loading: true;
@@ -96,10 +95,8 @@ export default {
       location.reload();
     },
     handleSizeChange(val) {
-      this.pageSize=val;
+      this.pageSize = val;
       if (this.queryByNameOff) {
-        
-       
         let page = {
           shopName: this.IshopName,
           pageNum: this.indexPage,
@@ -108,14 +105,11 @@ export default {
         api
           .selectShop(page)
           .then((res) => {
-       
             this.shopList = res.data.result.list;
             this.count = res.data.result.total;
-         
           })
           .catch((err) => console.log(err));
       } else {
-      
         let page = {
           pageNum: this.indexPage,
           pageSize: val,
@@ -123,50 +117,40 @@ export default {
         api
           .queryAll(page)
           .then((res) => {
-   
             this.shopList = res.data.result.list;
             this.count = res.data.result.total;
-    
           })
           .catch((err) => console.log(err));
       }
     },
     handleCurrentChange(val) {
-      this.pageNum=val;
+      this.pageNum = val;
       if (this.queryByNameOff) {
-        
-      let page = {
-        shopName:this.IshopName,
-        pageNum: val,
-        pageSize: this.pageSize,
-      };
-      api
-        .selectShop(page)
-        .then((res) => {
-        
-          this.shopList = res.data.result.list;
-          this.count = res.data.result.total;
-        
-        })
-        .catch((err) => console.log(err));
+        let page = {
+          shopName: this.IshopName,
+          pageNum: val,
+          pageSize: this.pageSize,
+        };
+        api
+          .selectShop(page)
+          .then((res) => {
+            this.shopList = res.data.result.list;
+            this.count = res.data.result.total;
+          })
+          .catch((err) => console.log(err));
       } else {
-       
-      let page = {
-        pageNum: val,
-        pageSize: this.pageSize,
-      };
-      api
-        .queryAll(page)
-        .then((res) => {
-        
-          this.shopList = res.data.result.list;
-          this.count = res.data.result.total;
-
-        })
-        .catch((err) => console.log(err));
+        let page = {
+          pageNum: val,
+          pageSize: this.pageSize,
+        };
+        api
+          .queryAll(page)
+          .then((res) => {
+            this.shopList = res.data.result.list;
+            this.count = res.data.result.total;
+          })
+          .catch((err) => console.log(err));
       }
-
-   
     },
   },
 };
@@ -181,17 +165,6 @@ export default {
   margin-top: 30px;
   padding-left: 55%;
   line-height: 12px;
-}
-
-.button {
-  padding: 0;
-  float: left;
-}
-
-.image {
-  width: 43%;
-  float: left;
-  display: Clock;
 }
 
 .clearfix:before,

@@ -12,14 +12,16 @@
           >消息中心</el-badge
         ></el-menu-item
       >
-      <el-menu-item index="/buyer/order" >
-          <el-badge :value="orderCount" @click="orderCount = '0'"  class="item">订单管理</el-badge>
+      <el-menu-item index="/buyer/order">
+        <el-badge :value="orderCount" @click="orderCount = '0'" class="item"
+          >订单管理</el-badge
+        >
       </el-menu-item>
       <el-submenu index="5">
         <template slot="title">个人中心</template>
         <el-menu-item index="5-1">会员中心</el-menu-item>
         <el-menu-item index="/buyer/personalAddress">管理收货地址</el-menu-item>
-             <el-menu-item index="/buyer/informationEdit">账户信息修改</el-menu-item>
+        <el-menu-item index="/buyer/informationEdit">账户信息修改</el-menu-item>
         <el-menu-item v-on:click="remove">注销</el-menu-item>
       </el-submenu>
     </el-menu>
@@ -36,7 +38,7 @@
         text-color="#303133"
       >
         <el-menu-item @click="sendToAll">
-          <p @click="innerDrawer = true">群聊（{{ OnlineCount }}）</p>
+          <p @click="innerDrawer = true">世界频道({{ OnlineCount }})</p>
         </el-menu-item>
         <!-- <el-menu-item
           v-for="(item, index) in userNames"
@@ -54,6 +56,7 @@
           size="50%"
           :visible.sync="innerDrawer"
         >
+          <p>{{ chatState }}</p>
           <div
             style="
               overflow: auto;
@@ -64,12 +67,21 @@
               border: 1px solid #eee;
             "
           >
-            <div class="info"  v-for="(item, index) in message" :key="'info-'+ index">
+            <div
+              class="info"
+              v-for="(item, index) in message"
+              :key="'info-' + index"
+            >
               {{ item.date }} <br />
               {{ item.userName }} :{{ item.msg }}
             </div>
-            <div style="margin-left:70%"  class="info1" v-for="(item, index) in myMsg" :key="'info1-'+ index">
-              {{ item.date }} <br/>
+            <div
+              style="margin-left: 70%"
+              class="info1"
+              v-for="(item, index) in myMsg"
+              :key="'info1-' + index"
+            >
+              {{ item.date }} <br />
               {{ item.userName }} :{{ item.msg }}
             </div>
           </div>
@@ -95,16 +107,16 @@
 </template>
 
 <script>
-
+import api from "@/api/api";
 export default {
   data() {
     return {
-      orderCount:"",
+      chatState: "",
+      orderCount: "",
       msgCount: "0",
       OnlineCount: "",
-      userName: "",
       message: [],
-      myMsg:[],
+      myMsg: [],
       AllMsg: new Map(),
       userName: "",
       toWho: "",
@@ -119,7 +131,7 @@ export default {
   },
   watch: {
     drawer() {
-        this.msgCount ='';
+      this.msgCount = "";
     },
   },
   methods: {
@@ -137,8 +149,8 @@ export default {
     handleClose(done) {
       done();
     },
+
     initWebSocket: function () {
-      this.userName = sessionStorage["userName"];
       this.websock = new WebSocket(
         "ws://localhost:8087/websocket/" + this.userName
       );
@@ -148,28 +160,26 @@ export default {
       this.websock.onclose = this.websocketclose;
     },
     websocketonopen: function () {
-      console.log("WebSocket连接成功");
+      this.chatState = "连接服务器成功";
     },
     websocketonerror: function (e) {
-      console.log("WebSocket连接发生错误");
+      this.chatState = "连接服务器失败,请刷新页面";
     },
     websocketonmessage: function (e) {
       ++this.msgCount;
       let json = JSON.parse(e.data);
-        this.OnlineCount = json.onLineCount;
+      this.OnlineCount = json.onLineCount;
       if (json.userNames) {
         this.userNames = json.userNames;
       }
       //to当作map的key值
       this.AllMsg.set(json.to, json);
-      if (this.toWho ) {
-          let msg = this.AllMsg.get(this.toWho);
-          this.message.push(msg);
+      if (this.toWho) {
+        let msg = this.AllMsg.get(this.toWho);
+        this.message.push(msg);
       }
     },
-    websocketclose: function (e) {
-      // console.log("connection closed (" + e.code + ")");
-    },
+    websocketclose: function (e) {},
     websocketsend() {
       let date = new Date();
       let date1 =
@@ -187,8 +197,18 @@ export default {
     },
   },
   created() {
-    this.initWebSocket();
+    api
+      .getLimit()
+      .then((response) => {
+        this.userName = response.data.result.accountName;
+ this.initWebSocket();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    
   },
+  
   destroyed: function () {
     this.websocketclose();
   },

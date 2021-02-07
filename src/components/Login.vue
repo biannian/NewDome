@@ -67,16 +67,14 @@ export default {
           }).then((response) => {
             var token = response.data.result;
             var theCode = response.data.code;
-            // sessionStorage["token"]=JSON.stringify(token);
-            console.log(response);
             sessionStorage["token"] = token;
-            sessionStorage["userName"] = this.accountName;
+    
             console.log(response);
             if (theCode == "200") {
               api
                 .getLimit()
                 .then((response) => {
-                  sessionStorage["accountUserId"]= response.data.result.accountUserId;
+             
                   switch (response.data.result.accountLimit) {
                     case 1:
                       this.$router.push({ path: "/buyer/Helloword" });

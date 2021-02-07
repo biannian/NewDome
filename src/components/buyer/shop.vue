@@ -56,8 +56,7 @@
                   <img
                     :src="commodity.commodityImg"
                     class="image"
-
-                    style="border-radius: 5px;width: 180px; height: 180px"
+                    style="border-radius: 5px; width: 180px; height: 180px"
                   />
                   <div style="font-size: 20px">
                     <span>{{ commodity.commodityName }} </span>
@@ -102,8 +101,8 @@
           <el-card :body-style="{ padding: '0px' }" shadow="hover">
             <div style="float: left">
               <img
-                style="width: 70px;height:70px"
-              :src="commodity.commodityImg"
+                style="width: 70px; height: 70px"
+                :src="commodity.commodityImg"
               />
             </div>
             <div>
@@ -201,44 +200,52 @@ export default {
   },
   methods: {
     pay() {
-      let accountUserId = {
-        accountUserId: sessionStorage["accountUserId"],
-      };
       api
-        .selectAddress(accountUserId)
+        .getLimit()
         .then((response) => {
-          if (response.data.result) {
-            let t = new Date();
-            let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
+          console.log(response);
+          this.orderBuyerId = response.data.result.accountName;
+          let a = {
+            accountUserId: response.data.result.accountUserId,
+          };
+          api
+            .selectAddress(a)
+            .then((response) => {
+              if (response.data.result) {
+                let t = new Date();
+                let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
+                let shop = {
+                  orderBuyerId: this.orderBuyerId,
+                  shopId: this.$route.query.shopId,
+                  orderState: 0,
+                  orderBuyerTime: time,
+                  shopping: this.shopping,
+                };
+                api
+                  .addOrder(shop)
+                  .then((response) => {
+                    if (response.data.code == "200") {
+                      Message.success("支付成功");
 
-            let shop = {
-              orderBuyerId: sessionStorage["userName"],
-              shopId: this.$route.query.shopId,
-              orderState: 0,
-              orderBuyerTime: time,
-              shopping: this.shopping,
-            };
-            api
-              .addOrder(shop)
-              .then((response) => {
-                if (response.data.code == "200") {
-                  Message.success("支付成功");
-
-                  this.timer = setTimeout(() => {
-                    //设置延迟执行
-                    this.$router.push({ path: "/buyer/order" });
-                  }, 800);
-                } else {
-                  Message.error("购买失败");
-                }
-              })
-              .catch((error) => console.log(error));
-          } else {
-            Message.warning("请先添加收货地址再下单");
-          }
+                      this.timer = setTimeout(() => {
+                        //设置延迟执行
+                        this.$router.push({ path: "/buyer/order" });
+                      }, 800);
+                    } else {
+                      Message.error("购买失败");
+                    }
+                  })
+                  .catch((error) => console.log(error));
+              } else {
+                Message.warning("请先添加收货地址再下单");
+              }
+            })
+            .catch((error) => {
+              console.error(error);
+            });
         })
-        .catch((error) => {
-          console.error(error);
+        .catch((err) => {
+          console.log(err);
         });
     },
     handleSelect() {},

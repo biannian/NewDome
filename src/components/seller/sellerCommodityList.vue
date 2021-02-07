@@ -27,8 +27,7 @@
                 <img
                   style="width: 140px; height: 110px"
                   :src="scope.row.commodityImg"
-                 
-                >
+                />
                 　　</template
               >
             </el-table-column>
@@ -81,7 +80,7 @@ export default {
   methods: {},
   data() {
     return {
-        fits: ['fill', 'contain', 'cover', 'none', 'scale-down'],
+      fits: ["fill", "contain", "cover", "none", "scale-down"],
       commodityList: [],
     };
   },
@@ -92,33 +91,31 @@ export default {
         query: commodity,
       });
     },
-     delectCommodity(row) {
+    delectCommodity(row) {
       let params = {
         commodityId: row.commodityId,
       };
-      api
-        .delectCommodity(params)
-        .catch((err) => console.log(err));
+      api.delectCommodity(params).catch((err) => console.log(err));
       location.reload();
     },
     selectCommodity() {
-      if (
-        sessionStorage["accountUserId"] == null ||
-        sessionStorage["accountUserId"] == ""
-      ) {
-        Message.warning("获取数据失败，请重新登录");
-        return false;
-      }
-      let a = {
-        commodityShopId: sessionStorage["accountUserId"],
-      };
       api
-        .queryAllCommodity(a)
-        .then((res) => {
-          console.log(res);
-          this.commodityList = res.data.result;
+        .getLimit()
+        .then((response) => {
+          let a = {
+            commodityShopId: response.data.result.accountUserId,
+          };
+          api
+            .queryAllCommodity(a)
+            .then((res) => {
+              console.log(res);
+              this.commodityList = res.data.result;
+            })
+            .catch((err) => console.log(err));
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.log(err);
+        });
     },
   },
 

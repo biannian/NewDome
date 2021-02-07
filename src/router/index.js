@@ -18,6 +18,9 @@ import sellerOrder from '@/components/seller/sellerOrder'
 import sellerAccountEdit from '@/components/seller/sellerAccountEdit'
 import sellerOrderEdit from '@/components/seller/sellerOrderEdit'
 
+
+import sellerInformation from '@/components/seller/sellerInformation'
+import chatList from '@/components/seller/chatList'
 import sellerCommodityEdit from '@/components/seller/sellerCommodityEdit'
 import sellerCommodityAdd from '@/components/seller/sellerCommodityAdd'
 import sellerCommodityList from '@/components/seller/sellerCommodityList'
@@ -106,6 +109,14 @@ export const routes = [
     path: '/seller/sellerCommodityEdit',
     name: 'sellerCommodityEdit',
     component: sellerCommodityEdit,
+  } , {
+    path: '/seller/chatList',
+    name: 'chatList',
+    component: chatList,
+  } , {
+    path: '/seller/sellerInformation',
+    name: 'sellerInformation',
+    component: sellerInformation,
   }
 ]
 const router = new Router({

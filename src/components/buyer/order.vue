@@ -31,7 +31,7 @@
         </el-aside>
         <el-main>
           <div class="inf" v-for="(shop, index) in shop" :key="'inf-' + index">
-            <a style="font-size:20px" @click="toShop(shop)">{{ shop }}</a>
+            <a style="font-size: 20px" @click="toShop(shop)">{{ shop }}</a>
           </div>
           <div
             class="info"
@@ -39,17 +39,31 @@
             :key="'info-' + index"
           >
             订单号：{{ order.orderId }} 订单时间：{{ order.orderBuyerTime }}
- <!-- <el-timeline :reverse="reverse">
- 
- <el-timeline-item
-      v-for="(orderBuyerTime, index) in 5"
-      :key="index"
-     :timestamp="order.orderBuyerTime"
- >
-      {{orderBuyerTime}}
-    </el-timeline-item>
- </el-timeline> -->
 
+            <div v-if="order.orderState != -1">
+              <el-steps :active="order.orderState + 1">
+                <el-step
+                  title="买家已下单"
+                  :description="order.orderBuyerTime"
+                ></el-step>
+                <el-step
+                  title="商家已确认订单"
+                  :description="order.orderSellerTime"
+                ></el-step>
+                <el-step
+                  title="骑手已取到订单"
+                  :description="order.orderRiderTime"
+                ></el-step>
+                <el-step
+                  title="骑手已送达"
+                  :description="order.orderRiderTime1"
+                ></el-step>
+                <el-step
+                  title="买家已确认收货"
+                  :description="order.orderBuyerTime1"
+                ></el-step>
+              </el-steps>
+            </div>
 
             <p v-if="order.orderState == -1">订单状态：已取消</p>
             <p v-else-if="order.orderState == 0">订单状态：正在等待商家确认</p>
@@ -61,21 +75,19 @@
           </div>
           <div v-for="(orderDetail, key) in orderDetail" :key="key">
             <div>
-              商品名: {{ orderDetail[key].commodityName }} 
-               商品图：
-                <img
-                  style="width: 110px; height: 110px"
-                  :src=" orderDetail[key].commodityImg"
-                 
-                >
+              商品名: {{ orderDetail[key].commodityName }}
+              商品图：
+              <img
+                style="width: 110px; height: 110px"
+                :src="orderDetail[key].commodityImg"
+              />
               商品数量：
               {{ orderDetail[key].commodityNumber }}
-           商品价格：
-              {{ orderDetail[key].commodityPrice }} 
+              商品价格：
+              {{ orderDetail[key].commodityPrice }}
             </div>
-        
           </div>
-    订单总计：{{ totalMoney }} <br>
+          订单总计：{{ totalMoney }} <br />
           <el-button @click="deleteOrder" size="mini" :disabled="!failState"
             >删除订单</el-button
           >
@@ -107,10 +119,9 @@
             >
           </el-popover>
           <div v-if="evaluate">
-               <el-rate v-model="shopScore" show-text> </el-rate>
-              <el-button size="mini">评价</el-button>
+            <el-rate v-model="shopScore" show-text> </el-rate>
+            <el-button size="mini">评价</el-button>
           </div>
-       
         </el-main>
       </el-container>
     </div>
@@ -125,8 +136,9 @@ export default {
   components: { topfile },
   data() {
     return {
-      evaluate:false,
-      shopScore: '',
+      userName: "",
+      evaluate: false,
+      shopScore: "",
       failState: false,
       state: true,
       visi: false,
@@ -153,7 +165,6 @@ export default {
       }
       if (value[0].orderState == 4) {
         this.failState = true;
-       
       }
     },
   },
@@ -254,22 +265,30 @@ export default {
       }
     },
     selectOrder() {
-      let params = {
-        orderBuyerId: sessionStorage["userName"],
-      };
       api
-        .selectOrder(params)
+        .getLimit()
         .then((response) => {
-          this.orders = response.data.result.orders;
-          this.shops = response.data.result.shops;
-          this.orderDetails = response.data.result.shoppings;
+          let params = {
+            orderBuyerId: response.data.result.accountName,
+          };
+          api
+            .selectOrder(params)
+            .then((response) => {
+              this.orders = response.data.result.orders;
+              this.shops = response.data.result.shops;
+              this.orderDetails = response.data.result.shoppings;
+            })
+            .catch((error) => console.log(error))
+            .finally(() => {
+              //每次打开的默认订单最id最大的
+              this.activeIndex = this.orders[
+                this.orders.length - 1
+              ].orderId.toString();
+              this.select(this.activeIndex);
+            });
         })
-        .catch((error) => console.log(error))
-        .finally(() => {
-          this.activeIndex = this.orders[
-            this.orders.length - 1
-          ].orderId.toString();
-          this.select(this.activeIndex);
+        .catch((err) => {
+          console.log(err);
         });
     },
   },

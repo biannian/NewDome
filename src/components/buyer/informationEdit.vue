@@ -13,6 +13,7 @@
     </el-container>
     <el-container>
       <el-main>
+     
         <el-form
           :model="ruleForm"
           status-icon
@@ -56,6 +57,8 @@
             <el-button @click="resetForm('ruleForm')">重置</el-button>
           </el-form-item>
         </el-form>
+
+
       </el-main>
     </el-container>
   </div>
@@ -134,8 +137,11 @@ export default {
     },
   },
   mounted(){
-    let a ={
-      accountName: sessionStorage["userName"],
+      api
+        .getLimit()
+        .then((response) => {
+        let a ={
+      accountName: response.data.result.accountName
     }
      api
       .queryByName(a)
@@ -143,6 +149,7 @@ export default {
          this.ruleForm.accountName = response.data.result.accountName;
       })
       .catch((error) => console.log(error));
+      }).catch((err)=>{console.log(err);})
   }
 };
 </script>

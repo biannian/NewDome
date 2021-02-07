@@ -27,7 +27,7 @@
         <div>
           <el-carousel :interval="4000" type="card" height="190px">
             <el-carousel-item v-for="(img, item) in imgUrl" :key="item">
-              <el-image :src="img.url" />
+              <el-image :src="img.url" @click="to(item)" />
             </el-carousel-item>
           </el-carousel>
         </div>
@@ -69,6 +69,10 @@ export default {
     };
   },
   methods: {
+    to(key){
+      let id = key +1;
+      this.$router.push({ path: "/buyer/shop?shopId="+id  });
+    },
     selectShop() {
    
       this.$refs.Index.queryByNameOff = true;

@@ -5,8 +5,7 @@
         <Aside></Aside>
       </el-aside>
       <el-container>
-        <el-header>
-           <Header></Header></el-header>
+        <el-header> <Header></Header></el-header>
 
         <el-breadcrumb
           separator-class="el-icon-arrow-right"
@@ -40,25 +39,20 @@
                 <span v-else></span>
               </template>
             </el-table-column>
-            <el-table-column label="是否被禁用" width="120">
+            <el-table-column label="是否被停用" width="120">
+           
               <template slot-scope="scope">
-                <span v-if="scope.row.accountBan === 1">
-                  <p>禁用</p>
-                </span>
-
-                <span v-if="scope.row.accountBan === 0">
-                  <p>未禁用</p>
-                </span>
+              <el-switch
+                v-model="scope.row.accountBan"
+                active-color="#13ce66"
+                inactive-color="#ff4949"
+                :change="banAccount(scope.row)"
+              >
+              </el-switch>
               </template>
             </el-table-column>
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
-                <el-button
-                  @click="handleClick(scope.row)"
-                  type="text"
-                  size="medium"
-                  >编辑</el-button
-                >
                 <el-popover placement="top" width="160">
                   <p>确定要删除此账户吗？</p>
                   <div style="text-align: right; margin: 0">
@@ -94,18 +88,17 @@ export default {
       value: true,
     };
   },
+ 
   methods: {
-    handleClick(row) {
-      // let params = row;
-      // this.$router.push({ path: "/root/accountEdit", params });
+    banAccount(value){
+  console.log(value);
+  
     },
     delect(row) {
       let params = {
         accountId: row.accountId,
       };
-      api
-        .accountDelete(params)
-        .catch((err) => console.log(err));
+      api.accountDelete(params).catch((err) => console.log(err));
       location.reload();
     },
   },

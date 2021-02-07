@@ -56,7 +56,7 @@ export default {
       accountPassword: "",
       accountPassword2: "",
       accountLimit: "1",
-      accountBan: "0",
+      accountBan: false,
       nameMsg: "",
       passwordMsg: "",
       passwordMsg1: "",

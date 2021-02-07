@@ -30,17 +30,29 @@ export default {
 
   data() {
     return {
+      userName:"",
       shopName: "",
     };
   },
   mounted() {
+  
+  api
+      .getLimit()
+      .then((response) => {
     let a ={
-      sellerId:sessionStorage["accountUserId"]
+      sellerId: response.data.result.accountUserId 
     }
-    api.queryShopName(a).then((res) => {
+    console.log(response);
+       api.queryShopName(a).then((res) => {
       this.shopName = res.data.result.shopName;
-      sessionStorage["shopId"] = res.data.result.shopId;
+      
     });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+ 
   },
 };
 </script>

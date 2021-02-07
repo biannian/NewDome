@@ -39,7 +39,9 @@
               prop="commodityImg"
               :rules="[{ required: true, message: '商品图不能为空' }]"
             >
+        
               <el-upload
+              
                 action
                 ref="upload"
                 list-type="picture-card"
@@ -56,6 +58,7 @@
                 <img width="100%" :src="url" alt="" />
               </el-dialog>
               <p style="font-size: 13px">只能上传jpg/png文件，且不超过1张</p>
+
             </el-form-item>
 
             <el-form-item
@@ -68,6 +71,7 @@
                   style="float: left"
                   v-model="Form.commodityMenuId"
                   placeholder="请选择"
+                  filterable
                 >
                   <el-option
                     v-for="item in menus"
@@ -78,12 +82,14 @@
                   </el-option>
                 </el-select>
                 <el-button
-                 style="float:right;"
+                  style="float: right"
                   type="primary"
                   @click="addMenu"
                   icon="el-icon-plus"
                   circle
-                ></el-button>
+                ></el-button
+                ><br />
+                <p>(没有的商品种类可以点击添加)</p>
               </el-col>
             </el-form-item>
 
@@ -138,7 +144,7 @@ import { Message } from "element-ui";
 import SellerHeader from "./sellerHeader.vue";
 export default {
   components: { SellerAside, SellerHeader },
-  methods: {},
+
   data() {
     return {
       dialogVisible: false,
@@ -156,8 +162,44 @@ export default {
     };
   },
   methods: {
-    addMenu(){
-      
+    addMenu() {
+      let _this = this;
+      this.$prompt("请输入要添加的种类名称", "添加商品种类", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        inputValidator: function (v) {
+          if (v) {
+            for (let i = 0; i < _this.menus.length; i++) {
+              if ( _this.menus[i].shopMenuName == v) {
+                return false;
+              }
+            }
+          } else {
+            return false;
+          }
+        },
+        inputErrorMessage: "商品种类不能为空且不可重复",
+      }).then(({ value }) => {
+        for (let i = 0; i < this.menus.length; i++) {
+          if (this.menus[i].shopMenuName == value) {
+            this.addMenu();
+            Message.warning("输入的种类名称重复！");
+            return false;
+          }
+        }
+        let a = {
+          shopMenuName: value,
+        };
+        api.addMenu(a).then((res) => {
+          if (res.data.result == 1) {
+            location.reload;
+            Message.success("添加成功");
+          } else {
+            Message.success("添加失败");
+          }
+        });
+      })
+      .catch((error)=>{console.log(error);})
     },
     upload() {
       Message.info("等待图片上传");
@@ -202,7 +244,7 @@ export default {
           api.commodityAdd(this.Form).then((res) => {
             if (res.data.result == 1) {
               location.reload();
-               Message.success("成功");
+              Message.success("成功");
             } else {
               Message.error("新增失败！");
             }
@@ -243,5 +285,4 @@ export default {
 .el-aside {
   color: #333;
 }
-
 </style>

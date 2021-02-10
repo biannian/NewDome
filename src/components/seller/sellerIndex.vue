@@ -42,17 +42,27 @@ export default {
     let a ={
       sellerId: response.data.result.accountUserId 
     }
-    console.log(response);
+   
        api.queryShopName(a).then((res) => {
-      this.shopName = res.data.result.shopName;
-      
+         if (res.data.result !=null) {
+            this.shopName = res.data.result.shopName;
+         }else{
+           this.$confirm('您还尚未添加店铺信息,功能不可用,请点击确认添加店铺信息(点击取消会返回登录页面)', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$router.push({ path: "/seller/sellerShopEdit" });
+        }).catch(() => {
+          sessionStorage.clear();
+          this.$router.push({ path: "/" });
+        });
+         }
     });
       })
       .catch((err) => {
         console.log(err);
       });
-
- 
   },
 };
 </script>

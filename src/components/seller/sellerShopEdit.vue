@@ -16,10 +16,103 @@
           <el-breadcrumb-item :to="{ path: '/seller/sellerIndex' }"
             >首页</el-breadcrumb-item
           >
-          <el-breadcrumb-item>店铺管理</el-breadcrumb-item>
+          <el-breadcrumb-item>店铺信息</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
         
+    <el-form
+            :model="Form"
+            ref="Form"
+            label-width="130px"
+            class="demo-ruleForm"
+          >
+            <el-form-item label="店铺编号" prop="shopId">
+              <el-col :span="3">
+                <el-input
+                  :disabled="true"
+                  v-model="Form.shopId"
+                ></el-input>
+              </el-col>
+            </el-form-item>
+       
+               <el-form-item
+              label="店铺名"
+              prop="shopName"
+              :rules="[{ required: true, message: '店铺名不能为空' }]"
+            >
+              <el-col :span="8">
+                <el-input type="text" v-model="Form.shopName"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item
+              label="店铺图"
+              prop="shopImg"
+              :rules="[{ required: true, message: '店铺图不能为空' }]"
+            >
+             <img width="150px" :src="Form.shopImg" />
+              <el-upload
+              
+                action
+                ref="upload"
+                list-type="picture-card"
+                :on-change="handleChange"
+                :on-preview="handlePictureCardPreview"
+                :auto-upload="false"
+                :limit="1"
+                :before-remove="handleRemove"
+                :http-request="upload"
+              >
+                <i class="el-icon-plus"></i>
+              </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="url" />
+              </el-dialog>
+              <p style="font-size: 13px">只能上传jpg/png文件，且不超过1张</p>
+
+
+            </el-form-item>
+            <el-form-item
+              label="店铺地址"
+              prop="shopAddress"
+              :rules="[{ required: true, message: '店铺地址不能为空' }]"
+            >
+              <el-col :span="12">
+                    <el-input
+              type="textarea"
+              v-model="Form.shopAddress"
+            ></el-input>
+              </el-col>
+            </el-form-item>
+         
+
+            <el-form-item
+              label="店铺起送价格"
+              prop="shopStartPrice"
+              :rules="[{ required: true, message: '店铺起送价格不能为空' }]"
+            >
+              <el-col :span="5">
+                <el-input type="text" v-model="Form.shopStartPrice"></el-input>
+              </el-col>
+            </el-form-item>
+
+              <el-form-item
+              label="店铺运费"
+              prop="shopSendPrice"
+              :rules="[{ required: true, message: '店铺运费不能为空' }]"
+            >
+              <el-col :span="5">
+                <el-input type="text" v-model="Form.shopSendPrice"></el-input>
+              </el-col>
+            </el-form-item>
+
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('Form')"
+                >提交</el-button
+              >
+              <el-button @click="resetForm('Form')">重置</el-button>
+            </el-form-item>
+          </el-form>
+
         </el-main>
       </el-container>
     </el-container>
@@ -27,6 +120,8 @@
 </template>
 <script>
 import api from "@/api/api";
+
+import { Message } from "element-ui";
 import SellerAside from './sellerAside.vue';
 import SellerHeader from './sellerHeader.vue';
 export default {
@@ -34,19 +129,108 @@ export default {
   methods: {},
   data() {
     return {
-   
+      dialogVisible:false,
+      url:"",
+    Form: {
+        shopId: "",
+        shopName: "",
+        shopSellerId:"",
+        shopImg: "",
+        shopAddress: "",
+        shopStartPrice: "",
+        shopSendPrice: "",
+      },
     };
   },
   methods: {
-    handleClick(row) {
-      // let params = row;
-      // this.$router.push({ path: "/root/accountEdit", params });
+     upload() {
+      Message.info("等待图片上传");
+      let formData = new FormData();
+      formData.append("picture", this.pictrue.raw);
+      api
+        .pictureAdd(formData)
+        .then((res) => {
+          console.log(res);
+          this.Form.shopImg = res.data.result;
+          Message.success("图片上传成功");
+        })
+        .catch((err) => {
+          console.error(err);
+        });
     },
-   
+      handleChange(file) {
+      this.pictrue = file;
+      this.$refs.upload.submit();
+    },
+    handleRemove() {
+      let a = {
+        path: this.Form.commodityImg,
+      };
+      api.pictureDelete(a).then((res) => {
+        if (res.data.code == 200) {
+          Message.success("删除成功");
+          this.Form.commodityImg = "";
+        } else {
+          Message.error("删除失败，请重试");
+        }
+      });
+    },
+    handlePictureCardPreview(file) {
+      this.url = file.url;
+      this.dialogVisible = true;
+    },
+    submitForm(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+     console.log(this.Form);
+     api
+     .updateShopInformation(this.Form)
+     .then((res)=>{
+       console.log(res);
+       if (res.data.result == 1) {
+              Message.success("成功");
+              location.reload();
+       }
+       else{
+          Message.error("修改失败！");
+       }
+     })
+        } else {
+         Message.error("修改失败！");
+          return false;
+        }
+      });
+    },
+    resetForm(formName) {
+      this.$refs[formName].resetFields();
+    },
+  selectShop(){
+      api
+      .getLimit()
+      .then((response) => {
+        this.Form.shopSellerId = response.data.result.accountUserId;
+        let a = {
+          sellerId: response.data.result.accountUserId,
+        };
+        api
+          .selectShopInformation(a)
+          .then((response) => {
+            console.log(response);
+            if (response.data.result) {
+              
+              this.Form = response.data.result;
+            }
+          })
+          .catch((error) => console.log(error));
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
   },
 
   mounted() {
-  
+  this.selectShop();
   },
 };
 </script>

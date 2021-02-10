@@ -66,26 +66,28 @@
             </div>
 
             <p v-if="order.orderState == -1">订单状态：已取消</p>
-            <p v-else-if="order.orderState == 0">订单状态：正在等待商家确认</p>
+            <p v-else-if="order.orderState == 0">订单状态：买家已下单</p>
             <p v-else-if="order.orderState == 1">订单状态：商家已确认订单</p>
-            <p v-else-if="order.orderState == 2">订单状态：骑手已取到订单</p>
+            <p v-else-if="order.orderState == 2">订单状态：骑手已取到外卖</p>
             <p v-else-if="order.orderState == 3">订单状态：骑手已送达</p>
             <p v-else-if="order.orderState == 4">订单状态：买家已确认收货</p>
             <p v-else>订单状态：未知状态</p>
           </div>
           <div v-for="(orderDetail, key) in orderDetail" :key="key">
             <div>
-              商品名: {{ orderDetail[key].commodityName }}
-              商品图：
-              <img
+                <img
                 style="width: 110px; height: 110px"
                 :src="orderDetail[key].commodityImg"
               />
+              商品名: {{ orderDetail[key].commodityName }}
+            
+            
               商品数量：
               {{ orderDetail[key].commodityNumber }}
               商品价格：
               {{ orderDetail[key].commodityPrice }}
             </div>
+            <br>
           </div>
           订单总计：{{ totalMoney }} <br />
           <el-button @click="deleteOrder" size="mini" :disabled="!failState"

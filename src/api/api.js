@@ -89,4 +89,16 @@ export default{
 	addMenu(params){
 		return http.get(`${resquest}/shop/addMenu.do`,params)
 	},
+	selectShopInformation(params){
+		return http.get(`${resquest}/shop/selectShopInformation.do`,params)
+	},
+	sellerSelectOrder(params){
+		return http.get(`${resquest}/Order/sellerSelectOrder.do`,params)
+	},
+	sellerSelectOrderById(params){
+		return http.get(`${resquest}/Order/	sellerSelectOrderById.do`,params)
+	},
+	updateShopInformation(params){
+		return http.post(`${resquest}/shop/updateShopInformation.do`,params)
+	},
 }

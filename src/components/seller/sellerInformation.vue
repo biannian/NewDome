@@ -68,7 +68,7 @@
             prop="sellerAddress"
             :rules="[
               { required: true, message: '个人住址不能为空' },
-              { min: 6, max: 25, message: '个人住址至少为6个汉字' },
+              { min: 6, message: '个人住址至少为6个汉字' },
             ]"
           >   <el-col :span="8">
             <el-input
@@ -97,6 +97,7 @@
 import api from "@/api/api";
 import SellerAside from './sellerAside.vue';
 import SellerHeader from './sellerHeader.vue';
+import { Message } from "element-ui";
 export default {
   components: {SellerAside, SellerHeader  },
   methods: {},
@@ -112,9 +113,30 @@ export default {
     };
   },
   methods: {
-    handleClick(row) {
-      // let params = row;
-      // this.$router.push({ path: "/root/accountEdit", params });
+      submitForm(ruleForm) {
+      this.$refs[ruleForm].validate((valid) => {
+        if (valid) {
+          console.log("验证通过");
+          console.log(this.ruleForm);
+          api
+            .updateSellerAddress(this.ruleForm)
+            .then((response) => {
+              if (response.data.result == 1) {
+                Message.success("修改成功！");
+               
+              } else {
+                Message.error("修改失败！");
+              }
+            })
+            .catch((error) => console.log(error));
+        } else {
+          Message.error("提交失败！");
+          return false;
+        }
+      });
+    },
+    resetForm(ruleForm) {
+      this.$refs[ruleForm].resetFields();
     },
    
   },
@@ -123,8 +145,7 @@ export default {
       api
       .getLimit()
       .then((response) => {
-     
-        this.ruleForm.buyerAccountName = response.data.result.accountName;
+        this.ruleForm.sellerAccountName = response.data.result.accountName;
         let a = {
           accountName: response.data.result.accountName,
         };

@@ -39,9 +39,7 @@
               prop="commodityImg"
               :rules="[{ required: true, message: '商品图不能为空' }]"
             >
-        
               <el-upload
-              
                 action
                 ref="upload"
                 list-type="picture-card"
@@ -58,7 +56,6 @@
                 <img width="100%" :src="url" alt="" />
               </el-dialog>
               <p style="font-size: 13px">只能上传jpg/png文件，且不超过1张</p>
-
             </el-form-item>
 
             <el-form-item
@@ -152,6 +149,7 @@ export default {
       pictrue: "",
       menus: [],
       Form: {
+        accountUserId:"",
         commodityImg: "",
         commodityMenuId: "",
         commodityName: "",
@@ -163,6 +161,7 @@ export default {
   },
   methods: {
     addMenu() {
+      this.selectMenu();
       let _this = this;
       this.$prompt("请输入要添加的种类名称", "添加商品种类", {
         confirmButtonText: "确定",
@@ -170,7 +169,7 @@ export default {
         inputValidator: function (v) {
           if (v) {
             for (let i = 0; i < _this.menus.length; i++) {
-              if ( _this.menus[i].shopMenuName == v) {
+              if (_this.menus[i].shopMenuName == v) {
                 return false;
               }
             }
@@ -179,27 +178,30 @@ export default {
           }
         },
         inputErrorMessage: "商品种类不能为空且不可重复",
-      }).then(({ value }) => {
-        for (let i = 0; i < this.menus.length; i++) {
-          if (this.menus[i].shopMenuName == value) {
-            this.addMenu();
-            Message.warning("输入的种类名称重复！");
-            return false;
-          }
-        }
-        let a = {
-          shopMenuName: value,
-        };
-        api.addMenu(a).then((res) => {
-          if (res.data.result == 1) {
-            location.reload;
-            Message.success("添加成功");
-          } else {
-            Message.success("添加失败");
-          }
-        });
       })
-      .catch((error)=>{console.log(error);})
+        .then(({ value }) => {
+          for (let i = 0; i < this.menus.length; i++) {
+            if (this.menus[i].shopMenuName == value) {
+              this.addMenu();
+              Message.warning("输入的种类名称重复！");
+              return false;
+            }
+          }
+          let a = {
+            shopMenuName: value,
+          };
+          api.addMenu(a).then((res) => {
+            if (res.data.result == 1) {
+              this.selectMenu();
+              Message.success("添加成功");
+            } else {
+              Message.success("添加失败");
+            }
+          });
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     upload() {
       Message.info("等待图片上传");
@@ -238,17 +240,24 @@ export default {
       this.dialogVisible = true;
     },
     submitForm(formName) {
-      this.Form.commodityShopId = sessionStorage["shopId"];
       this.$refs[formName].validate((valid) => {
         if (valid) {
-          api.commodityAdd(this.Form).then((res) => {
-            if (res.data.result == 1) {
-              location.reload();
-              Message.success("成功");
-            } else {
-              Message.error("新增失败！");
-            }
-          });
+          api
+            .getLimit()
+            .then((response) => {
+              this.Form.accountUserId = response.data.result.accountUserId;
+              api.commodityAdd(this.Form).then((res) => {
+                if (res.data.result == 1) {
+                  Message.success("成功");
+                  location.reload();
+                } else {
+                  Message.error("新增失败！");
+                }
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         } else {
           Message.error("新增失败！");
           return false;

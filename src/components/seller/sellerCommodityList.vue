@@ -80,7 +80,6 @@ export default {
   methods: {},
   data() {
     return {
-      fits: ["fill", "contain", "cover", "none", "scale-down"],
       commodityList: [],
     };
   },
@@ -103,13 +102,16 @@ export default {
         .getLimit()
         .then((response) => {
           let a = {
-            commodityShopId: response.data.result.accountUserId,
+            accountUserId: response.data.result.accountUserId,
           };
           api
             .queryAllCommodity(a)
             .then((res) => {
-              console.log(res);
+              if(res.data.result){
               this.commodityList = res.data.result;
+              }else{
+                Message.error("请添加店铺信息")
+              }
             })
             .catch((err) => console.log(err));
         })

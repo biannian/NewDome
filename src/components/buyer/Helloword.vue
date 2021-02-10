@@ -85,9 +85,7 @@ export default {
       api
         .selectShop(param)
         .then((Response) => {
-         
           this.$refs.Index.shopList = Response.data.result.list;
-      
           this.$refs.Index.count = Response.data.result.total;
         })
         .catch((err) => console.log(err));

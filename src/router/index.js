@@ -16,9 +16,10 @@ import informationEdit from '@/components/buyer/informationEdit'
 import sellerIndex from '@/components/seller/sellerIndex'
 import sellerOrder from '@/components/seller/sellerOrder'
 import sellerAccountEdit from '@/components/seller/sellerAccountEdit'
+import sellerOrderList from '@/components/seller/sellerOrderList'
+
+
 import sellerOrderEdit from '@/components/seller/sellerOrderEdit'
-
-
 import sellerInformation from '@/components/seller/sellerInformation'
 import chatList from '@/components/seller/chatList'
 import sellerCommodityEdit from '@/components/seller/sellerCommodityEdit'
@@ -92,6 +93,11 @@ export const routes = [
     name: 'sellerAccountEdit',
     component: sellerAccountEdit,
   }, {
+    path: '/seller/sellerOrderList',
+    name: 'sellerOrderList',
+    component: sellerOrderList,
+  }
+  , {
     path: '/seller/sellerOrderEdit',
     name: 'sellerOrderEdit',
     component: sellerOrderEdit,

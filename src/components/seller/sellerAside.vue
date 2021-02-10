@@ -8,7 +8,7 @@
       <el-submenu index="2">
       <template slot="title">订单管理</template>
       <el-menu-item index="/seller/sellerOrder">订单确定</el-menu-item>
-      <el-menu-item index="/seller/sellerOrderEdit">订单管理</el-menu-item>
+      <el-menu-item index="/seller/sellerOrderList">订单管理</el-menu-item>
     </el-submenu>
     <el-submenu index="3">
       <template slot="title">商品管理</template>

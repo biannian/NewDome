@@ -4,8 +4,8 @@
       <el-col :span="6" v-for="(shop, index) in shopList" :key="index">
         <el-card :body-style="{ padding: '0px' }" shadow="hover">
           <img
-            style="float: left; width: 150px"
-            src="https://shadow.elemecdn.com/app/element/hamburger.9cf7b091-55e9-11e9-a976-7f4d0b07eef6.png"
+            style="float: left; width: 150px;height:150px"
+            :src="shop.shopImg"
             class="image"
           />
 
@@ -87,7 +87,7 @@ export default {
         this.count = res.data.result.total;
       })
       .catch((err) => console.log(err));
-    loading: true;
+   
   },
   methods: {
     selectShop(shopId) {

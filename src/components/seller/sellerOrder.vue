@@ -19,11 +19,10 @@
           <el-breadcrumb-item>订单确认</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
-          <div class="r" v-for="(order, index) in Orders" :key="'r'+index">
+          <div class="r" v-for="(order, index) in Orders" :key="'r' + index">
             <span>{{ order.orderId }}</span>
-         
+
             <el-button @click="confirm(order.orderId)">确认订单</el-button>
-         
           </div>
           <div v-for="(shopping, inde) in shoppings" :key="inde">
             <div v-for="(shop, ind) in shopping" :key="ind">
@@ -35,7 +34,7 @@
               <span>{{ shop.commodityPrice }}*</span>
               <span>{{ shop.commodityNumber }}</span>
             </div>
-            <br><br>
+            <br /><br />
           </div>
           <div class="info" v-for="(buyer, key) in buyers" :key="'info-' + key">
             <span>{{ buyer.buyerAccountName }}</span>
@@ -50,6 +49,7 @@
   </div>
 </template>
 <script>
+import dateFormat from "../../utils/time";
 import api from "@/api/api";
 import SellerAside from "./sellerAside.vue";
 import SellerHeader from "./sellerHeader.vue";
@@ -66,22 +66,22 @@ export default {
     };
   },
   methods: {
-    confirm(order){
+    confirm(order) {
+      let t = new Date();
+      let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
       let a = {
-        orderId : order,
-        orderState : '1' 
-      }
-      api
-      .updateState(a)
-      .then((res)=>{
-        if (res.data.result == 1 ) {
+        orderSellerTime: time,
+        orderId: order,
+        orderState: "1",
+      };
+      api.updateState(a).then((res) => {
+        if (res.data.result == 1) {
           Message.success("修改成功");
-          
-        }else{
-          Message.error("修改失败")
+        } else {
+          Message.error("修改失败");
         }
         this.sellerSelectOrderById();
-      })
+      });
     },
     sellerSelectOrderById() {
       api

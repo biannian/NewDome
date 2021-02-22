@@ -2,43 +2,52 @@
 // 导入封装好的axios实例
 import request from './request'
 
-const http ={
+const http = {
     /**
      * methods: 请求
      * @param url 请求地址 
      * @param params 请求参数
      */
-    get(url,params){
+    getExcel(url, params) {
         const config = {
             method: 'get',
-            url:url
+            url: url,
+            responseType: "blob",
         }
-        if(params) config.params = params
+        if (params) config.params = params
         return request(config)
     },
-    post(url,params){
+    get(url, params) {
+        const config = {
+            method: 'get',
+            url: url
+        }
+        if (params) config.params = params
+        return request(config)
+    },
+    post(url, params) {
         const config = {
             method: 'post',
-            url:url
-            
+            url: url
+
         }
-        if(params) config.data = params
+        if (params) config.data = params
         return request(config)
     },
-    put(url,params){
+    put(url, params) {
         const config = {
             method: 'put',
-            url:url
+            url: url
         }
-        if(params) config.params = params
+        if (params) config.params = params
         return request(config)
     },
-    delete(url,params){
+    delete(url, params) {
         const config = {
             method: 'delete',
-            url:url
+            url: url
         }
-        if(params) config.params = params
+        if (params) config.params = params
         return request(config)
     }
 }

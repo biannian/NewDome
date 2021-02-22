@@ -8,7 +8,7 @@
         <el-header>
           <seller-header></seller-header>
         </el-header>
-
+   
         <el-breadcrumb
           separator-class="el-icon-arrow-right"
           style="margin-top: 20px; margin-left: 20px"
@@ -17,8 +17,11 @@
             >首页</el-breadcrumb-item
           >
           <el-breadcrumb-item>商品管理</el-breadcrumb-item>
+         
         </el-breadcrumb>
+      
         <el-main>
+              <el-button @click="out">导出商品表格</el-button>
           <el-table :data="commodityList" border>
             <el-table-column fixed prop="commodityId" label="编号" width="100">
             </el-table-column>
@@ -80,10 +83,25 @@ export default {
   methods: {},
   data() {
     return {
+      accountUserId:"",
       commodityList: [],
     };
   },
   methods: {
+     out() {
+       let a = {
+         accountUserId:this.accountUserId
+       }
+      api.exportExcel(a)
+      .then((res) => {
+        const url = window.URL.createObjectURL(res.data);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "商品表.xls";
+        document.body.appendChild(a);
+        a.click();
+      });
+    },
     edit(commodity) {
       this.$router.push({
         path: "/seller/sellerCommodityEdit",
@@ -101,6 +119,7 @@ export default {
       api
         .getLimit()
         .then((response) => {
+          this.accountUserId = response.data.result.accountUserId
           let a = {
             accountUserId: response.data.result.accountUserId,
           };

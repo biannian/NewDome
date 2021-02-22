@@ -9,8 +9,9 @@
           <sellerHeader></sellerHeader>
         </el-header>
         <el-main>
-          <p  style="font-size:20px">    欢迎登录</p>
-          <p style="font-size:20px">{{ shopName }}</p>
+          <p style="font-size: 20px">欢迎登录</p>
+          <p style="font-size: 20px">{{ shopName }}</p>
+
       
         </el-main>
       </el-container>
@@ -25,40 +26,48 @@ import api from "@/api/api";
 import sellerAside from "./sellerAside";
 import sellerHeader from "./sellerHeader";
 export default {
-  methods: {},
+  methods: {
+   
+  },
   components: { sellerAside, sellerHeader },
 
   data() {
     return {
-      userName:"",
+      userName: "",
       shopName: "",
     };
   },
   mounted() {
-  
-  api
+    api
       .getLimit()
       .then((response) => {
-    let a ={
-      sellerId: response.data.result.accountUserId 
-    }
-   
-       api.queryShopName(a).then((res) => {
-         if (res.data.result !=null) {
+       
+        let a = {
+          sellerId: response.data.result.accountUserId,
+        };
+
+        api.queryShopName(a).then((res) => {
+          if (res.data.result != null) {
             this.shopName = res.data.result.shopName;
-         }else{
-           this.$confirm('您还尚未添加店铺信息,功能不可用,请点击确认添加店铺信息(点击取消会返回登录页面)', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          this.$router.push({ path: "/seller/sellerShopEdit" });
-        }).catch(() => {
-          sessionStorage.clear();
-          this.$router.push({ path: "/" });
+          } else {
+            this.$confirm(
+              "您还尚未添加店铺信息,功能不可用,请点击确认添加店铺信息(点击取消会返回登录页面)",
+              "提示",
+              {
+                confirmButtonText: "确定",
+                cancelButtonText: "取消",
+                type: "warning",
+              }
+            )
+              .then(() => {
+                this.$router.push({ path: "/seller/sellerShopEdit" });
+              })
+              .catch(() => {
+                sessionStorage.clear();
+                this.$router.push({ path: "/" });
+              });
+          }
         });
-         }
-    });
       })
       .catch((err) => {
         console.log(err);

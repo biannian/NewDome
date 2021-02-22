@@ -91,6 +91,7 @@ export default {
             accountUserId: response.data.result.accountUserId,
           };
           api.sellerSelectOrderById(a).then((res) => {
+            console.log(res);
             this.Orders = res.data.result.Orders;
             this.buyers = res.data.result.buyers;
             this.shoppings = res.data.result.shoppings;

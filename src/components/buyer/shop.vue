@@ -33,7 +33,7 @@
               <el-menu-item-group>
                 <el-menu-item
                   v-for="(shopMenus, indexId) in shopMenu"
-                  @click="goAssignBlock('block' + indexId, 50)"
+                  @click="goAssignBlock('block' + indexId, 60)"
                   :key="indexId"
                   :index="'' + indexId"
                 >
@@ -293,7 +293,6 @@ export default {
     goBack() {
       history.back();
     },
-
     //el 标签  speed 滚动速率 此处是50px 值越大滚动的越快
     goAssignBlock(el, speed) {
       // let windowH = window.innerHeight; //浏览器窗口高度

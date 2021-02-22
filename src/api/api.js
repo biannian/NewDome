@@ -92,6 +92,9 @@ export default{
 	selectShopInformation(params){
 		return http.get(`${resquest}/shop/selectShopInformation.do`,params)
 	},
+	exportExcel(params){
+		return http.getExcel(`${resquest}/shop/exportExcel.do`,params)
+	},
 	sellerSelectOrder(params){
 		return http.get(`${resquest}/Order/sellerSelectOrder.do`,params)
 	},

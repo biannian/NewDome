@@ -101,14 +101,12 @@ export default {
           console.log(err);
         });
     },
-  },
-
+  }, 
   mounted() {
     this.sellerSelectOrderById();
   },
 };
-</script>
-
+</script> 
 <style>
 .el-header {
   background-color: #b3c0d1;

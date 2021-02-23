@@ -8,7 +8,6 @@
         <el-header>
           <seller-header></seller-header>
            </el-header>
-
         <el-breadcrumb
           separator-class="el-icon-arrow-right"
           style="margin-top: 20px; margin-left: 20px"
@@ -19,7 +18,6 @@
           <el-breadcrumb-item>个人信息</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
-        
    <el-form
           :model="ruleForm"
           ref="ruleForm"
@@ -77,8 +75,6 @@
             ></el-input>
             </el-col>
           </el-form-item>
-
-
           <el-form-item>
             <el-button type="primary" @click="submitForm('ruleForm')"
               >提交</el-button
@@ -86,8 +82,6 @@
             <el-button @click="resetForm('ruleForm')">重置</el-button>
           </el-form-item>
         </el-form>
-
-
         </el-main>
       </el-container>
     </el-container>
@@ -138,9 +132,7 @@ export default {
     resetForm(ruleForm) {
       this.$refs[ruleForm].resetFields();
     },
-   
   },
-
   mounted() {
       api
       .getLimit()

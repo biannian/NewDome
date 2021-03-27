@@ -65,7 +65,7 @@ export default {
               accountPassword: this.accountPassword,
             },
           }).then((response) => {
-            var token = response.data.result;
+            var token = response.data.result.token;
             var theCode = response.data.code;
             sessionStorage["token"] = token;
     

@@ -152,7 +152,7 @@ export default {
 
     initWebSocket: function () {
       this.websock = new WebSocket(
-        "ws://localhost:8087/websocket/" + this.userName
+        "ws://121.5.222.148:8087/websocket/" + this.userName
       );
       this.websock.onopen = this.websocketonopen;
       this.websock.onerror = this.websocketonerror;

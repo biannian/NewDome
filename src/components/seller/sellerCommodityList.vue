@@ -25,10 +25,10 @@
           <el-table :data="commodityList" border>
             <el-table-column fixed prop="commodityId" label="编号" width="100">
             </el-table-column>
-            <el-table-column label="商品图" width="200">
+            <el-table-column label="商品图" width="120">
               <template slot-scope="scope">
                 <img
-                  style="width: 140px; height: 110px"
+                  style="width: 100px; height: 75px"
                   :src="scope.row.commodityImg"
                 />
                 　　</template

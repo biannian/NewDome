@@ -47,7 +47,9 @@ export default {
         };
 
         api.queryShopName(a).then((res) => {
+    
           if (res.data.result != null) {
+            sessionStorage["shopId"] = res.data.result.shopId;
             this.shopName = res.data.result.shopName;
           } else {
             this.$confirm(

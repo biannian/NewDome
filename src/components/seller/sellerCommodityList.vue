@@ -8,7 +8,7 @@
         <el-header>
           <seller-header></seller-header>
         </el-header>
-   
+
         <el-breadcrumb
           separator-class="el-icon-arrow-right"
           style="margin-top: 20px; margin-left: 20px"
@@ -17,11 +17,18 @@
             >首页</el-breadcrumb-item
           >
           <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-         
         </el-breadcrumb>
-      
+
         <el-main>
-              <el-button @click="out">导出商品表格</el-button>
+          <el-button @click="out">导出全部商品表格</el-button>
+          &nbsp; &nbsp; &nbsp;
+          <el-input
+            clearable
+            v-model="searchText"
+            placeholder="输入编号或商品名"
+            style="width: 20%"
+          />
+
           <el-table :data="commodityList" border>
             <el-table-column fixed prop="commodityId" label="编号" width="100">
             </el-table-column>
@@ -68,6 +75,20 @@
               </template>
             </el-table-column>
           </el-table>
+
+          <br />
+          <div class="block">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="1"
+              :page-sizes="[4, 8, 12, 16]"
+              :page-size="4"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+            >
+            </el-pagination>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -83,17 +104,34 @@ export default {
   methods: {},
   data() {
     return {
-      accountUserId:"",
+      searchText: "",
+      accountUserId: "",
       commodityList: [],
+      size: "",
+      current: "",
+      total: 0,
     };
   },
+  watch: {
+    searchText(value) {
+      this.selectCommodity(this.size, this.current, value);
+    },
+  },
   methods: {
-     out() {
-       let a = {
-         accountUserId:this.accountUserId
-       }
-      api.exportExcel(a)
-      .then((res) => {
+    search() {
+      console.log(14);
+    },
+    handleSizeChange(val) {
+      this.selectCommodity(val, this.current, this.searchText);
+    },
+    handleCurrentChange(val) {
+      this.selectCommodity(this.size, val, this.searchText);
+    },
+    out() {
+      let a = {
+        accountUserId: this.accountUserId,
+      };
+      api.exportExcel(a).then((res) => {
         const url = window.URL.createObjectURL(res.data);
         const a = document.createElement("a");
         a.href = url;
@@ -115,21 +153,56 @@ export default {
       api.delectCommodity(params).catch((err) => console.log(err));
       location.reload();
     },
-    selectCommodity() {
+    selectCommodity(size, current, search) {
+      this.size = size;
+      this.current = current;
       api
         .getLimit()
         .then((response) => {
-          this.accountUserId = response.data.result.accountUserId
+          this.accountUserId = response.data.result.accountUserId;
           let a = {
             accountUserId: response.data.result.accountUserId,
           };
           api
             .queryAllCommodity(a)
             .then((res) => {
-              if(res.data.result){
-              this.commodityList = res.data.result;
-              }else{
-                Message.error("请添加店铺信息")
+              if (res.data.result) {
+                var commodityList = res.data.result; 
+                if (search) {
+                  var commodity = [];
+                  var reg = /^[0-9]*$/; 
+                  if (reg.test(search)) {
+                    //输入的内容为纯数字
+                    commodityList.forEach((element) => {
+                      if (element.commodityId.toString().includes(search)) {
+                        commodity.push(element);
+                      } 
+                    });
+                  } else {
+                    //输入的内容不为纯数字
+                    commodityList.forEach((element) => {
+                      if (element.commodityName.includes(search)) {
+                        commodity.push(element);
+                      }
+                    });
+                  }
+                }else{
+                  var commodity = commodityList;
+                } 
+                var newSize = size;
+                var commoditys = [];
+                var number = (current - 1) * size;
+                commodity.forEach((element) => {
+                  if ((number -= 1) < 0) {
+                    if ((newSize -= 1) >= 0) {
+                      commoditys.push(element);
+                    }
+                  }
+                });
+                this.total = commodity.length;
+                this.commodityList = commoditys;
+              } else {
+                Message.error("请添加店铺信息");
               }
             })
             .catch((err) => console.log(err));
@@ -141,7 +214,7 @@ export default {
   },
 
   mounted() {
-    this.selectCommodity();
+    this.selectCommodity(4, 1, this.searchText);
   },
 };
 </script>

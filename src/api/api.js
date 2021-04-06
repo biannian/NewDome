@@ -5,7 +5,7 @@ import http from '../utils/http'
  *  @param '/testIp'代表vue-cil中config，index.js中配置的代理
  */
 let resquest = "http://localhost:8087"
-
+// let resquest = "http://121.5.222.148/:8087"
 // get请求
 export default{
 	queryAll(params){
@@ -44,6 +44,9 @@ export default{
 	addOrder(params){
 		return http.post(`${resquest}/Order/addOrder.do`,params)
 	},
+	queryOrder(params){
+		return http.get(`${resquest}/Order/queryOrder.do`,params)
+	},
 	deleteOrder(params){
 		return http.get(`${resquest}/Order/deleteOrder.do`,params)
 	},
@@ -66,7 +69,10 @@ export default{
 		return http.post(`${resquest}/Seller/updateSellerAddress.do`,params)
 	},
 	selectMenu(params){
-		return http.post(`${resquest}/shop/selectMenu.do`,params)
+		return http.get(`${resquest}/shop/selectMenu.do`,params)
+	},
+	selectShopType(params){
+		return http.get(`${resquest}/shop/selectShopType.do`,params)
 	},
 	selectAddress(params){
 		return http.get(`${resquest}/Login/selectAddress.do`,params)

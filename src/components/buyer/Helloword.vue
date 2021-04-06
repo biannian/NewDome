@@ -73,10 +73,8 @@ export default {
       let id = key +1;
       this.$router.push({ path: "/buyer/shop?shopId="+id  });
     },
-    selectShop() {
-   
-      this.$refs.Index.queryByNameOff = true;
-  
+    selectShop() { 
+      this.$refs.Index.queryByNameOff = true; 
       let param = {
         pageNum: this.$refs.Index.indexPage,
         pageSize: this.$refs.Index.pageSize,
@@ -85,6 +83,7 @@ export default {
       api
         .selectShop(param)
         .then((Response) => {
+        
           this.$refs.Index.shopList = Response.data.result.list;
           this.$refs.Index.count = Response.data.result.total;
         })

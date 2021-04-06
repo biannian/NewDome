@@ -22,17 +22,30 @@
           <el-table :data="Orders" border>
             <el-table-column fixed="left" width="110" label="操作">
               <template slot-scope="scope">
-               <span> <el-button size="mini" @click="confirm(scope.row)" type="success"
-                  >确认订单</el-button
-                ></span>
-              
-                 <span> <el-button  size="mini" @click="confirm(scope.row)"  type="danger"
-                  >取消订单</el-button
-                ></span>
-               
+                <span>
+                  <el-button
+                    size="mini"
+                    @click="confirm(scope.row)"
+                    type="success"
+                    >确认订单</el-button
+                  ></span
+                >
+
+                <span>
+                  <el-button
+                    size="mini"
+                    @click="confirm(scope.row)"
+                    type="danger"
+                    >取消订单</el-button
+                  ></span
+                >
               </template>
             </el-table-column>
             <el-table-column prop="orderId" label="编号" width="50">
+            </el-table-column>
+            <el-table-column prop="orderTips" label="订单备注" width="100">
+            </el-table-column>
+            <el-table-column prop="tableware" label="餐具" width="50">
             </el-table-column>
             <el-table-column prop="orderBuyerTime" label="下单时间" width="160">
             </el-table-column>
@@ -42,7 +55,7 @@
               width="200"
             >
             </el-table-column>
-            <el-table-column label="商品" :width="commodityWidh* 145">
+            <el-table-column label="商品" :width="commodityWidth * 145">
               <template slot-scope="scope">
                 <span
                   v-for="(shopping, index) in scope.row.shopping"
@@ -58,6 +71,19 @@
               </template>
             </el-table-column>
           </el-table>
+          <br />
+          <div class="block">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="1"
+              :page-sizes="[4, 8]"
+              :page-size="4"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+            >
+            </el-pagination>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -75,13 +101,22 @@ export default {
   methods: {},
   data() {
     return {
-      commodityWidh: "",
+      size: "",
+      current: "",
+      total: 0,
+      commodityWidth: "",
       Orders: [],
     };
   },
 
   methods: {
-    confirm(order) { 
+    handleSizeChange(val) {
+      this.sellerSelectOrderById(val, this.current);
+    },
+    handleCurrentChange(val) {
+      this.sellerSelectOrderById(this.size, val);
+    },
+    confirm(order) {
       let t = new Date();
       let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
       let a = {
@@ -98,29 +133,41 @@ export default {
         this.sellerSelectOrderById();
       });
     },
-    sellerSelectOrderById() {
+    sellerSelectOrderById(size, current) {
+      this.size = size;
+      this.current = current;
       let param = {
         shopId: sessionStorage["shopId"],
       };
       api.queryOrder(param).then((res) => {
- 
         if (res.data.result) {
-          this.Orders = res.data.result;
           var order = res.data.result;
-            var max = 0;
-          order.forEach((element) => { 
+          console.log(order);
+          var max = 0;
+          var newSize = size;
+          var orders = [];
+          var number = (current - 1) * size;
+          order.forEach((element) => {
+            if ((number -= 1) < 0) {
+              if ((newSize -= 1) >= 0) {
+                orders.push(element);
+              }
+            }
+          });
+          orders.forEach((element) => {
             if (element.shopping.length > max) {
               max = element.shopping.length;
-            } 
+            }
           });
-          this.commodityWidh = max;
-         
+          this.total = order.length;
+          this.commodityWidth = max;
+          this.Orders = orders;
         }
       });
     },
   },
   mounted() {
-    this.sellerSelectOrderById();
+    this.sellerSelectOrderById(4, 1);
   },
 };
 </script> 

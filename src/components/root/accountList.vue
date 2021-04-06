@@ -90,9 +90,11 @@ export default {
   },
  
   methods: {
-    banAccount(value){
-  console.log(value);
-  
+    banAccount(value){ 
+       api.banAccount(value)
+       .then((res)=>{
+         console.log(res);
+       })
     },
     delect(row) {
       let params = {

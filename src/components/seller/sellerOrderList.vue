@@ -21,6 +21,10 @@
           <el-table :data="orderList" border>
             <el-table-column prop="orderId" label="编号" width="50">
             </el-table-column>
+              <el-table-column prop="orderTips" label="订单备注" width="120">
+            </el-table-column>
+            <el-table-column prop="tableware" label="餐具" width="100">
+            </el-table-column>
             <el-table-column label="订单状态" width="100">
               <template slot-scope="scope">
                 <span v-if="scope.row.orderState === -2">
@@ -49,6 +53,21 @@
                 </span>
               </template>
             </el-table-column>
+              <el-table-column label="商品" :width="commodityWidth * 155">
+              <template slot-scope="scope">
+                <span
+                  v-for="(shopping, index) in scope.row.shopping"
+                  :key="index"
+                >
+                  <img
+                    width="70px"
+                    height="70px"
+                    :src="shopping.commodityImg"
+                  />
+                  {{ shopping.commodityName }}*{{ shopping.commodityNumber }}
+                </span>
+              </template>
+            </el-table-column>
             <el-table-column prop="orderBuyerTime" label="下单时间" width="151">
             </el-table-column>
 
@@ -57,10 +76,7 @@
               label="卖家确认订单时间"
               width="200"
             >
-            </el-table-column>
-
-            <el-table-column prop="orderRiderId" label="骑手" width="100">
-            </el-table-column>
+            </el-table-column> 
             <el-table-column
               prop="orderRiderTime"
               label="骑手取货时间"
@@ -86,36 +102,26 @@
               width="200"
             >
             </el-table-column>
-            <el-table-column label="商品" :width="commodityWidh * 145">
-              <template slot-scope="scope">
-                <span
-                  v-for="(shopping, index) in scope.row.shopping"
-                  :key="index"
-                >
-                  <img
-                    width="70px"
-                    height="70px"
-                    :src="shopping.commodityImg"
-                  />
-                  {{ shopping.commodityName }}*{{ shopping.commodityNumber }}
-                </span>
-              </template>
+              <el-table-column prop="riderName" label="骑手姓名" width="80">
             </el-table-column>
+            
+            <el-table-column prop="riderTel" label="骑手手机号" width="110">
+            </el-table-column>
+          
           </el-table>
-<br/>
-         <div class="block">
-   
-    <el-pagination
-      @size-change="handleSizeChange"
-      @current-change="handleCurrentChange"
-      :current-page="currentPage4"
-      :page-sizes="[4, 8]"
-      :page-size="4"
-      layout="total, sizes, prev, pager, next, jumper"
-      :total="total">
-    </el-pagination>
-  </div>
- 
+          <br />
+          <div class="block">
+            <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="1"
+              :page-sizes="[4, 8]"
+              :page-size="4"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total"
+            >
+            </el-pagination>
+          </div>
         </el-main>
       </el-container>
     </el-container>
@@ -130,50 +136,58 @@ export default {
   methods: {},
   data() {
     return {
-      total:'',
+      size:'',
+      current:'',
+      total: 0,
+      commodityWidth: "",
       orderList: [],
     };
   },
   methods: {
-       handleSizeChange(val) {
-        console.log(`每页 ${val} 条`);
-      },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
-      },
-    sellerOrder(size,current) {
+    handleSizeChange(val) {
+       this.sellerOrder(val, this.current);
+    },
+    handleCurrentChange(val) {
+        this.sellerOrder(this.size, val);
+    },
+    sellerOrder(size, current) {
+      this.size = size;
+      this.current = current;
       let param = {
         shopId: sessionStorage["shopId"],
         orderState: "1",
       };
       api.queryOrder(param).then((res) => {
         if (res.data.result) {
-    
           var order = res.data.result;
+          console.log(order);
           var max = 0;
-          var total = 0;
+          var newSize = size;
           var orders = [];
-          order.forEach((element) => {
-            if((size -= 1) >= 0){
-    orders.push(element);
-    console.log(size);
+          var number = (current - 1) * size;
+          order.forEach((element) => {  
+          
+            if ((number -= 1 ) < 0) {
+              if ((newSize -= 1) >= 0) {
+                orders.push(element);
+              }
             }
-         
-            total += 1;
+          });
+          orders.forEach((element) => {
             if (element.shopping.length > max) {
               max = element.shopping.length;
             }
           });
-          this.total =total;
-          this.commodityWidh = max;
-            this.orderList=orders;
+          this.total = order.length;
+          this.commodityWidth = max;
+          this.orderList = orders;
         }
       });
     },
   },
 
   mounted() {
-    this.sellerOrder(4,4);
+    this.sellerOrder(4, 1);
   },
 };
 </script>

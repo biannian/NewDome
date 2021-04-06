@@ -7,7 +7,7 @@
       <el-container>
         <el-header>
           <seller-header></seller-header>
-           </el-header>
+        </el-header>
 
         <el-breadcrumb
           separator-class="el-icon-arrow-right"
@@ -19,8 +19,7 @@
           <el-breadcrumb-item>店铺信息</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
-        
-    <el-form
+          <el-form
             :model="Form"
             ref="Form"
             label-width="130px"
@@ -28,14 +27,11 @@
           >
             <el-form-item label="店铺编号" prop="shopId">
               <el-col :span="3">
-                <el-input
-                  :disabled="true"
-                  v-model="Form.shopId"
-                ></el-input>
+                <el-input :disabled="true" v-model="Form.shopId"></el-input>
               </el-col>
             </el-form-item>
-       
-               <el-form-item
+
+            <el-form-item
               label="店铺名"
               prop="shopName"
               :rules="[{ required: true, message: '店铺名不能为空' }]"
@@ -49,9 +45,8 @@
               prop="shopImg"
               :rules="[{ required: true, message: '店铺图不能为空' }]"
             >
-             <img width="150px" :src="Form.shopImg" />
+              <img width="150px" :src="Form.shopImg" />
               <el-upload
-              
                 action
                 ref="upload"
                 list-type="picture-card"
@@ -68,8 +63,6 @@
                 <img width="100%" :src="url" />
               </el-dialog>
               <p style="font-size: 13px">只能上传jpg/png文件，且不超过1张</p>
-
-
             </el-form-item>
             <el-form-item
               label="店铺地址"
@@ -77,13 +70,9 @@
               :rules="[{ required: true, message: '店铺地址不能为空' }]"
             >
               <el-col :span="12">
-                    <el-input
-              type="textarea"
-              v-model="Form.shopAddress"
-            ></el-input>
+                <el-input type="textarea" v-model="Form.shopAddress"></el-input>
               </el-col>
             </el-form-item>
-         
 
             <el-form-item
               label="店铺起送价格"
@@ -95,13 +84,77 @@
               </el-col>
             </el-form-item>
 
-              <el-form-item
+            <el-form-item
               label="店铺运费"
               prop="shopSendPrice"
               :rules="[{ required: true, message: '店铺运费不能为空' }]"
             >
               <el-col :span="5">
                 <el-input type="text" v-model="Form.shopSendPrice"></el-input>
+              </el-col>
+            </el-form-item>
+            <el-form-item
+              label="店铺介绍"
+              prop="shopInfo"
+              :rules="[{ required: true, message: '店铺介绍不能为空' }]"
+            >
+              <el-col :span="12">
+                <el-input type="textarea" v-model="Form.shopInfo"></el-input>
+              </el-col>
+            </el-form-item>
+
+            <el-form-item
+              label="店铺种类"
+              prop="shopTypeId"
+              :rules="[{ required: true, message: '店铺种类不能为空' }]"
+            >
+              <el-col :span="5">
+                <el-select
+                  style="float: left"
+                  v-model="Form.shopTypeId"
+                  placeholder="请选择"
+                  filterable
+                >
+                  <el-option
+                    v-for="item in menus"
+                    :key="item.shopTypeId"
+                    :label="item.shopType"
+                    :value="item.shopTypeId"
+                  >
+                  </el-option>
+                </el-select>
+              </el-col>
+            </el-form-item>
+
+            <el-form-item
+              label="营业时间"
+              prop="shopOpenTime"
+              :rules="[{ required: true, message: '营业时间不能为空' }]"
+            >
+              <el-col :span="5">
+                <el-time-select
+                  v-model="Form.shopOpenTime"
+                  :picker-options="{
+                    start: '06:30',
+                    step: '00:15',
+                 end: '23:30',
+                  }"
+                  placeholder="开始时间"
+                >
+                </el-time-select>
+                 </el-col>
+                    <el-col :span="2">至</el-col>
+                   <el-col :span="5">
+                   <el-time-select
+                  v-model="Form.shopCloseTime"
+                  :picker-options="{
+                    start: '08:30',
+                    step: '00:15',
+                     end: '23:30',
+                  }"
+                  placeholder="结束时间"
+                >
+                </el-time-select>
               </el-col>
             </el-form-item>
 
@@ -112,7 +165,6 @@
               <el-button @click="resetForm('Form')">重置</el-button>
             </el-form-item>
           </el-form>
-
         </el-main>
       </el-container>
     </el-container>
@@ -122,28 +174,43 @@
 import api from "@/api/api";
 
 import { Message } from "element-ui";
-import SellerAside from './sellerAside.vue';
-import SellerHeader from './sellerHeader.vue';
+import SellerAside from "./sellerAside.vue";
+import SellerHeader from "./sellerHeader.vue";
 export default {
-  components: {SellerAside, SellerHeader  },
+  components: { SellerAside, SellerHeader },
   methods: {},
   data() {
     return {
-      dialogVisible:false,
-      url:"",
-    Form: {
+      menus: [],
+      dialogVisible: false,
+      url: "",
+      Form: {
         shopId: "",
         shopName: "",
-        shopSellerId:"",
+        shopSellerId: "",
         shopImg: "",
         shopAddress: "",
         shopStartPrice: "",
         shopSendPrice: "",
+        shopTypeId: "",
+        shopInfo: "",
+        shopOpenTime: "",
+        shopCloseTime: "",
       },
     };
   },
   methods: {
-     upload() {
+    selectMenu() {
+      api
+        .selectShopType()
+        .then((res) => {
+          this.menus = res.data.result;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    upload() {
       Message.info("等待图片上传");
       let formData = new FormData();
       formData.append("picture", this.pictrue.raw);
@@ -158,7 +225,7 @@ export default {
           console.error(err);
         });
     },
-      handleChange(file) {
+    handleChange(file) {
       this.pictrue = file;
       this.$refs.upload.submit();
     },
@@ -181,22 +248,21 @@ export default {
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) {
-     console.log(this.Form);
-     api
-     .updateShopInformation(this.Form)
-     .then((res)=>{
-       console.log(res);
-       if (res.data.result == 1) {
+        if (valid) { 
+          api.updateShopInformation(this.Form).then((res) => {
+            
+            if (res.data.result == 1) {
               Message.success("成功");
-              location.reload();
-       }
-       else{
-          Message.error("修改失败！");
-       }
-     })
+                  this.timer = setTimeout(() => {
+                   location.reload();
+                  },500);
+           
+            } else {
+              Message.error("修改失败！");
+            }
+          });
         } else {
-         Message.error("修改失败！");
+          Message.error("修改失败！");
           return false;
         }
       });
@@ -204,33 +270,33 @@ export default {
     resetForm(formName) {
       this.$refs[formName].resetFields();
     },
-  selectShop(){
+    selectShop() {
       api
-      .getLimit()
-      .then((response) => {
-        this.Form.shopSellerId = response.data.result.accountUserId;
-        let a = {
-          sellerId: response.data.result.accountUserId,
-        };
-        api
-          .selectShopInformation(a)
-          .then((response) => {
-            console.log(response);
-            if (response.data.result) {
-              
-              this.Form = response.data.result;
-            }
-          })
-          .catch((error) => console.log(error));
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+        .getLimit()
+        .then((response) => {
+          this.Form.shopSellerId = response.data.result.accountUserId;
+          let a = {
+            sellerId: response.data.result.accountUserId,
+          };
+          api
+            .selectShopInformation(a)
+            .then((response) => {
+              console.log(response);
+              if (response.data.result) {
+                this.Form = response.data.result;
+              }
+            })
+            .catch((error) => console.log(error));
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 
   mounted() {
-  this.selectShop();
+    this.selectMenu();
+    this.selectShop();
   },
 };
 </script>

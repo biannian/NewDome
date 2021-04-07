@@ -137,27 +137,26 @@
                   :picker-options="{
                     start: '06:30',
                     step: '00:15',
-                 end: '23:30',
+                    end: '23:30',
                   }"
                   placeholder="开始时间"
                 >
                 </el-time-select>
-                 </el-col>
-                    <el-col :span="2">至</el-col>
-                   <el-col :span="5">
-                   <el-time-select
+              </el-col>
+              <el-col :span="2">至</el-col>
+              <el-col :span="5">
+                <el-time-select
                   v-model="Form.shopCloseTime"
                   :picker-options="{
                     start: '08:30',
                     step: '00:15',
-                     end: '23:30',
+                    end: '23:30',
                   }"
                   placeholder="结束时间"
                 >
                 </el-time-select>
               </el-col>
-            </el-form-item>
-
+            </el-form-item> 
             <el-form-item>
               <el-button type="primary" @click="submitForm('Form')"
                 >提交</el-button
@@ -171,8 +170,7 @@
   </div>
 </template>
 <script>
-import api from "@/api/api";
-
+import api from "@/api/api"; 
 import { Message } from "element-ui";
 import SellerAside from "./sellerAside.vue";
 import SellerHeader from "./sellerHeader.vue";
@@ -248,15 +246,13 @@ export default {
     },
     submitForm(formName) {
       this.$refs[formName].validate((valid) => {
-        if (valid) { 
+        if (valid) {
           api.updateShopInformation(this.Form).then((res) => {
-            
             if (res.data.result == 1) {
               Message.success("成功");
-                  this.timer = setTimeout(() => {
-                   location.reload();
-                  },500);
-           
+              this.timer = setTimeout(() => {
+                location.reload();
+              }, 500);
             } else {
               Message.error("修改失败！");
             }
@@ -296,7 +292,7 @@ export default {
 
   mounted() {
     this.selectMenu();
-    this.selectShop();
+    this.selectShop(); 
   },
 };
 </script>

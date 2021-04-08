@@ -7,7 +7,10 @@ import http from '../utils/http'
 let resquest = "http://localhost:8087"
 // let resquest = "http://121.5.222.148/:8087"
 // get请求
-export default{
+export default{ 
+	register(params){
+    	return  http.post(`${resquest}/Login/register.do`,params)
+	},
 	queryAll(params){
     	return  http.get(`${resquest}/shop/queryAll.do`,params)
 	},

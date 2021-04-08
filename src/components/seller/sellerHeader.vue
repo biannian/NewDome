@@ -1,7 +1,8 @@
 <template>
   <el-header style="text-align: right; font-size: 21px">
     <span> {{ userName }}|</span>
-    <span @click="exit">注销</span>
+    <a @click="exit">注销</a>
+    
   </el-header>
 </template>
 

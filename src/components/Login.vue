@@ -1,12 +1,12 @@
 <template>
+<!--  
   <div class="login">
     <h1>&nbsp;&nbsp;{{ msg }}</h1>
     <br />
-    <input v-model="accountName" class="form-control" placeholder="用户名" />
+    <el-input v-model="accountName" placeholder="用户名" />
     <br />
-    <input
-      type="password"
-      class="form-control"
+    <el-input
+      type="password" 
       placeholder="密码"
       v-model="accountPassword"
     />
@@ -22,11 +22,38 @@
       class="btn btn-default"
     >
       注册
-    </button>
- 
-    
-    
+    </button> 
+  </div> -->
+
+  <div class="login" >
+   
+   <el-row type="flex" class="row-bg" justify="center">
+      <el-col :span="3">
+       
+      <h2 >Welcome</h2>
+      </el-col>
+      </el-row>
+
+    <el-row type="flex" class="row-bg" justify="center">
+      <el-col :span="6">
+       
+        <el-input  clearable v-model="accountName" placeholder="用户名"
+      /></el-col>
+      </el-row>
+      <el-row type="flex" class="row-bg" justify="center">
+      <el-col :span="6">
+        <el-input  clearable  show-password placeholder="密码" v-model="accountPassword"
+      /></el-col>
+    </el-row>
+    <el-row type="flex" class="row-bg" justify="center"> 
+        <el-col :span="4"><el-link @click="register" type="primary">注册账户</el-link></el-col>
+    </el-row>
+    <el-row type="flex" class="row-bg" justify="center" > 
+  <el-col :span="2"><el-button @click="logindo" type="success">confirm</el-button></el-col> 
+   <el-col :span="2"><el-button @click="reset" type="primary" >reset</el-button></el-col>
+</el-row>
   </div>
+ 
 </template>
 
 <script>
@@ -36,8 +63,7 @@ import { Message } from "element-ui";
 export default {
   name: "Login",
   data() {
-    return {
-      msg: "欢迎登录",
+    return { 
       accountName: "",
       accountPassword: "",
       nameMsg: "",
@@ -45,6 +71,10 @@ export default {
     };
   },
   methods: {
+    reset(){
+      this.accountName = "";
+      this.accountPassword="";
+    },
     logindo: function () {
       var username = this.accountName;
       if (username.length == "0") {
@@ -65,36 +95,38 @@ export default {
               accountPassword: this.accountPassword,
             },
           }).then((response) => {
-            var token = response.data.result.token;
+             
+           
             var theCode = response.data.code;
-            sessionStorage["token"] = token;
-     
-            if (theCode == "200") {
+          
+
+            if (theCode == "200") { 
+                sessionStorage["token"] = response.data.result.token;
               api
                 .getLimit()
                 .then((response) => {
-             
                   switch (response.data.result.accountLimit) {
                     case 1:
                       this.$router.push({ path: "/buyer/Helloword" });
                       break;
                     case 2:
-                        Message.error("页面尚未完成");
+                      Message.error("页面尚未完成");
                       break;
                     case 3:
-                         this.$router.push({ path: "/seller/sellerIndex" });
+                      this.$router.push({ path: "/seller/sellerIndex" });
                       break;
                     case 4:
-                    this.$router.push({ path: "/root/accountIndex"});
-               
+                      this.$router.push({ path: "/root/accountIndex" });
+
                       break;
                   }
                 })
                 .catch((err) => console.log(err));
             } else if (theCode == "403") {
-              this.passwordMsg = "该账户被禁用";
-            } else {
-              this.passwordMsg = "用户名或者账户错误";
+               
+              Message.warning("该账户被禁用")
+            } else { 
+              Message.error("用户名或者账户错误")
             }
           });
         }
@@ -103,16 +135,14 @@ export default {
     register: function () {
       this.$router.push({ path: "/register" });
     },
-    chat(){
-         this.$router.push({ path: "/chat" });
-    }
+    chat() {
+      this.$router.push({ path: "/chat" });
+    },
   },
 };
 </script>
 <style>
 .login {
-  margin-top: 150px;
-  margin-left: 550px;
-  margin-right: 550px;
+   margin-top: 10%;
 }
 </style>

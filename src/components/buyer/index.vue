@@ -82,12 +82,11 @@ export default {
     };
     api
       .queryAll(page)
-      .then((res) => {
-        this.shopList = res.data.result.list;
-        this.count = res.data.result.total;
+      .then((res) => { 
+        this.shopList = res.data.result;
+        this.count = res.data.result.length;
       })
-      .catch((err) => console.log(err));
-   
+      .catch((err) => console.log(err)); 
   },
   methods: {
     selectShop(shopId) {
@@ -95,62 +94,10 @@ export default {
       location.reload();
     },
     handleSizeChange(val) {
-      this.pageSize = val;
-      if (this.queryByNameOff) {
-        let page = {
-          shopName: this.IshopName,
-          pageNum: this.indexPage,
-          pageSize: val,
-        };
-        api
-          .selectShop(page)
-          .then((res) => {
-            this.shopList = res.data.result.list;
-            this.count = res.data.result.total;
-          })
-          .catch((err) => console.log(err));
-      } else {
-        let page = {
-          pageNum: this.indexPage,
-          pageSize: val,
-        };
-        api
-          .queryAll(page)
-          .then((res) => {
-            this.shopList = res.data.result.list;
-            this.count = res.data.result.total;
-          })
-          .catch((err) => console.log(err));
-      }
+       console.log(val); 
     },
     handleCurrentChange(val) {
-      this.pageNum = val;
-      if (this.queryByNameOff) {
-        let page = {
-          shopName: this.IshopName,
-          pageNum: val,
-          pageSize: this.pageSize,
-        };
-        api
-          .selectShop(page)
-          .then((res) => {
-            this.shopList = res.data.result.list;
-            this.count = res.data.result.total;
-          })
-          .catch((err) => console.log(err));
-      } else {
-        let page = {
-          pageNum: val,
-          pageSize: this.pageSize,
-        };
-        api
-          .queryAll(page)
-          .then((res) => {
-            this.shopList = res.data.result.list;
-            this.count = res.data.result.total;
-          })
-          .catch((err) => console.log(err));
-      }
+        console.log(val);
     },
   },
 };

@@ -121,7 +121,7 @@ export default {
         } else {
           Message.error("取消订单失败");
         }
-        this.sellerSelectOrderById();
+       this.sellerSelectOrderById(4, 1);
       });
     },
     handleSizeChange(val) {
@@ -144,7 +144,7 @@ export default {
         } else {
           Message.error("确认失败");
         }
-        this.sellerSelectOrderById();
+       this.sellerSelectOrderById(4, 1);
       });
     },
     sellerSelectOrderById(size, current) {
@@ -155,8 +155,7 @@ export default {
       };
       api.queryOrder(param).then((res) => {
         if (res.data.result) {
-          var order = res.data.result;
-          console.log(order);
+          var order = res.data.result.reverse(); 
           var max = 0;
           var newSize = size;
           var orders = [];

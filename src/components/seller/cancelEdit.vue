@@ -163,7 +163,7 @@ export default {
       };
       api.queryOrder(param).then((res) => {
         if (res.data.result) {
-          var order = res.data.result;
+          var order = res.data.result.reverse();
       
           var max = 0;
           var newSize = size;

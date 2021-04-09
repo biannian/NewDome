@@ -50,6 +50,10 @@ service.interceptors.response.use(response => {
         error.message = '未授权，请重新登录'  
         window.location.href = "http://localhost:8080/#/"
         break;
+        case 402:
+          error.message = '登录已过期，请重新登录'  
+          window.location.href = "http://localhost:8080/#/"
+          break;
       case 403:
         history.back()
         error.message = '拒绝访问'

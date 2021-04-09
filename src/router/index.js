@@ -20,6 +20,7 @@ import sellerOrderList from '@/components/seller/sellerOrderList'
 
 
 import sellerOrderEdit from '@/components/seller/sellerOrderEdit'
+import cancelEdit from '@/components/seller/cancelEdit'
 import sellerInformation from '@/components/seller/sellerInformation'
 import chatList from '@/components/seller/chatList'
 import sellerCommodityEdit from '@/components/seller/sellerCommodityEdit'
@@ -115,7 +116,13 @@ export const routes = [
     path: '/seller/sellerCommodityEdit',
     name: 'sellerCommodityEdit',
     component: sellerCommodityEdit,
-  } , {
+  } ,
+  {
+    path: '/seller/cancelEdit',
+    name: 'cancelEdit',
+    component: cancelEdit,
+  } ,
+  {
     path: '/seller/chatList',
     name: 'chatList',
     component: chatList,

@@ -34,7 +34,7 @@
                 <span>
                   <el-button
                     size="mini"
-                    @click="confirm(scope.row)"
+                    @click="cancel(scope.row)"
                     type="danger"
                     >取消订单</el-button
                   ></span
@@ -55,7 +55,7 @@
               width="200"
             >
             </el-table-column>
-            <el-table-column label="商品" :width="commodityWidth * 145">
+            <el-table-column label="商品" :width="commodityWidth * 165">
               <template slot-scope="scope">
                 <span
                   v-for="(shopping, index) in scope.row.shopping"
@@ -110,6 +110,20 @@ export default {
   },
 
   methods: {
+      cancel(order) { 
+      let a = { 
+        orderId: order.orderId,
+        orderState: "-1",
+      };
+      api.updateState(a).then((res) => {
+        if (res.data.result == 1) {
+          Message.success("取消订单成功");
+        } else {
+          Message.error("取消订单失败");
+        }
+        this.sellerSelectOrderById();
+      });
+    },
     handleSizeChange(val) {
       this.sellerSelectOrderById(val, this.current);
     },

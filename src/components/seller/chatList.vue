@@ -16,7 +16,7 @@
           <el-breadcrumb-item :to="{ path: '/seller/sellerIndex' }"
             >首页</el-breadcrumb-item
           >
-          <el-breadcrumb-item>消息管理</el-breadcrumb-item>
+          <el-breadcrumb-item>销售管理</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
         

@@ -3,7 +3,9 @@
 import axios from 'axios'
 // 使用element-ui Message做消息提醒
 import { Message } from 'element-ui';
+import { Loading } from 'element-ui';
 //1. 创建新的axios实例，
+ 
 const service = axios.create({
   // 公共接口--这里注意后面会讲
   // baseURL: process.env.BASE_API,
@@ -12,12 +14,14 @@ const service = axios.create({
   timeout: 3 * 1000
 })
 // 2.请求拦截器
+var loading;
 service.interceptors.request.use(config => {
+   loading = Loading.service();
   //发请求前做的一些处理，数据转化，配置请求头，设置token,设置loading等，根据需求去添加
   // config.data = JSON.stringify(config.data); //数据转化,也可以使用qs转换
   // config.headers = {
   //   'Content-Type': 'multipart/form-data' //配置请求头
-  // }
+  // } 
   //注意使用token的时候需要引入cookie方法或者用本地localStorage等方法，推荐js-cookie
   const token = sessionStorage["token"];//这里取token之前，你肯定需要先拿到token,存一下
   if (token) {
@@ -28,9 +32,10 @@ service.interceptors.request.use(config => {
 }, error => {
   Promise.reject(error)
 })
-
+ 
 // 3.响应拦截器
-service.interceptors.response.use(response => {
+service.interceptors.response.use(response => {  
+    loading.close(); 
   //接收到响应数据并成功后的一些共有的处理，关闭loading等
   if(response.status == '213'){
    sessionStorage["token"] =response.headers.newtoken;

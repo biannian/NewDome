@@ -55,12 +55,14 @@
             </el-table-column>
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
-                <el-button type="text" size="medium" @click="edit(scope.row)"
+                
+                <el-button size="mini" @click="edit(scope.row)"
                   >修改
                 </el-button>
                 <el-popover placement="top" width="160">
                   <p>确定要删除此商品吗？</p>
                   <div style="text-align: right; margin: 0">
+                      
                     <el-button
                       type="primary"
                       size="mini"
@@ -68,7 +70,7 @@
                       >确定</el-button
                     >
                   </div>
-                  <el-button slot="reference" type="text" size="medium"
+                  <el-button slot="reference"   type="danger" size="mini"
                     >删除</el-button
                   >
                 </el-popover>

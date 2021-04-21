@@ -20,42 +20,45 @@
         </el-breadcrumb>
         <el-main>
           <el-table :data="Orders" border>
-            <el-table-column fixed="left" width="110" label="操作">
+            <el-table-column fixed="left" width="220" label="操作">
               <template slot-scope="scope">
-                <span>
+                 <el-button
+                    size="mini"
+                   @click="toDetail(scope.row)"
+                   
+                    >详情</el-button
+                  > 
                   <el-button
                     size="mini"
                     @click="confirm(scope.row)"
-                    type="success"
-                    >确认订单</el-button
-                  ></span
-                >
+                   
+                    >接单</el-button
+                  > 
 
-                <span>
+                
                   <el-button
                     size="mini"
                     @click="cancel(scope.row)"
                     type="danger"
-                    >取消订单</el-button
-                  ></span
-                >
+                    >拒单</el-button
+                  > 
               </template>
             </el-table-column>
             <el-table-column prop="orderId" label="编号" width="50">
             </el-table-column>
-            <el-table-column prop="orderTips" label="订单备注" width="100">
+            <el-table-column prop="orderTips" label="订单备注" width="180">
             </el-table-column>
-            <el-table-column prop="tableware" label="餐具" width="50">
+            <el-table-column prop="tableware" label="餐具" width="70">
             </el-table-column>
             <el-table-column prop="orderBuyerTime" label="下单时间" width="160">
             </el-table-column>
             <el-table-column
               prop="buyerAddress.buyerAddress"
               label="收货地址"
-              width="200"
+              width="440"
             >
             </el-table-column>
-            <el-table-column label="商品" :width="commodityWidth * 165">
+            <!-- <el-table-column label="商品" :width="commodityWidth * 165">
               <template slot-scope="scope">
                 <span
                   v-for="(shopping, index) in scope.row.shopping"
@@ -69,7 +72,7 @@
                   {{ shopping.commodityName }}*{{ shopping.commodityNumber }}
                 </span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
           <br />
           <div class="block">
@@ -77,8 +80,8 @@
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page="1"
-              :page-sizes="[4, 8]"
-              :page-size="4"
+              :page-sizes="[5, 10,15,20]"
+              :page-size="5"
               layout="total, sizes, prev, pager, next, jumper"
               :total="total"
             >
@@ -110,6 +113,13 @@ export default {
   },
 
   methods: {
+     toDetail(val) { 
+      var order = JSON.stringify(val); 
+      this.$router.push({
+        path: "/seller/sellerOrderDetail",
+        query: { order: order },
+      });
+    },
       cancel(order) { 
       let a = { 
         orderId: order.orderId,
@@ -180,7 +190,7 @@ export default {
     },
   },
   mounted() {
-    this.sellerSelectOrderById(4, 1);
+    this.sellerSelectOrderById(5, 1);
   },
 };
 </script> 

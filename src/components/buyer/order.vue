@@ -224,7 +224,7 @@ export default {
       api
         .updateState(a)
         .then((response) => {
-          console.log(response);
+      
           if (response.data.result == 1) {
             Message.success("取消订单成功");
             this.selectOrder();

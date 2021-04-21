@@ -26,7 +26,7 @@ import chatList from '@/components/seller/chatList'
 import sellerCommodityEdit from '@/components/seller/sellerCommodityEdit'
 import sellerCommodityAdd from '@/components/seller/sellerCommodityAdd'
 import sellerCommodityList from '@/components/seller/sellerCommodityList'
-
+import sellerOrderDetail from '@/components/seller/sellerOrderDetail'
 Vue.use(Router)
 export const routes = [
   {
@@ -130,6 +130,10 @@ export const routes = [
     path: '/seller/sellerInformation',
     name: 'sellerInformation',
     component: sellerInformation,
+  }, {
+    path: '/seller/sellerOrderDetail',
+    name: 'sellerOrderDetail',
+    component: sellerOrderDetail,
   }
 ]
 const router = new Router({

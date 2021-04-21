@@ -7,8 +7,7 @@
       <el-container>
         <el-header>
           <seller-header></seller-header>
-        </el-header>
-
+        </el-header> 
         <el-breadcrumb
           separator-class="el-icon-arrow-right"
           style="margin-top: 20px; margin-left: 20px"
@@ -20,16 +19,20 @@
         </el-breadcrumb>
         <el-main>
           <el-table :data="Orders" border>
-            <el-table-column fixed="left" width="110" label="操作">
+            <el-table-column fixed="left" width="150" label="操作">
               <template slot-scope="scope">
-                <span>
+                <el-button
+                    size="mini"
+                    @click="toDetail(scope.row)"
+                    
+                    >查看</el-button
+                  > 
                   <el-button
                     size="mini"
                     @click="confirm(scope.row)"
-                    type="success"
-                    >通过退款</el-button
-                  ></span
-                > 
+                    
+                    >通过</el-button
+                  > 
               </template>
             </el-table-column>
             <el-table-column prop="orderId" label="编号" width="50">
@@ -62,19 +65,19 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column prop="orderTips" label="订单备注" width="100">
+            <el-table-column prop="orderTips" label="订单备注" width="180">
             </el-table-column>
-            <el-table-column prop="tableware" label="餐具" width="50">
+            <el-table-column prop="tableware" label="餐具" width="70">
             </el-table-column>
             <el-table-column prop="orderBuyerTime" label="下单时间" width="160">
             </el-table-column>
             <el-table-column
               prop="buyerAddress.buyerAddress"
               label="收货地址"
-              width="200"
+              width="400"
             >
             </el-table-column>
-            <el-table-column label="商品" :width="commodityWidth * 165">
+            <!-- <el-table-column label="商品" :width="commodityWidth * 165">
               <template slot-scope="scope">
                 <span
                   v-for="(shopping, index) in scope.row.shopping"
@@ -88,7 +91,7 @@
                   {{ shopping.commodityName }}*{{ shopping.commodityNumber }}
                 </span>
               </template>
-            </el-table-column>
+            </el-table-column> -->
           </el-table>
           <br />
           <div class="block">
@@ -96,8 +99,8 @@
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
               :current-page="1"
-              :page-sizes="[4, 8]"
-              :page-size="4"
+              :page-sizes="[5, 10,15,20]"
+              :page-size="5"
               layout="total, sizes, prev, pager, next, jumper"
               :total="total"
             >
@@ -126,16 +129,21 @@ export default {
       commodityWidth: "",
       Orders: [],
     };
-  },
-
+  }, 
   methods: {
+      toDetail(val) { 
+      var order = JSON.stringify(val); 
+      this.$router.push({
+        path: "/seller/sellerOrderDetail",
+        query: { order: order },
+      });
+    },
     handleSizeChange(val) {
       this.sellerSelectOrderById(val, this.current);
     },
     handleCurrentChange(val) {
       this.sellerSelectOrderById(this.size, val);
-    },
-  
+    }, 
     confirm(order) {
       let t = new Date();
       let time = dateFormat("YYYY-mm-dd HH:MM:SS", t);
@@ -146,8 +154,7 @@ export default {
       };
       api.updateState(a).then((res) => {
         if (res.data.result == 1) {
-          Message.success("通过退款成功");
-     
+          Message.success("通过退款成功"); 
         } else {
           Message.error("通过退款失败");
         }
@@ -159,12 +166,11 @@ export default {
       this.current = current;
       let param = {
         shopId: sessionStorage["shopId"],
-        orderState:-2
+        orderState:-2 
       };
       api.queryOrder(param).then((res) => {
         if (res.data.result) {
-          var order = res.data.result.reverse();
-      
+          var order = res.data.result.reverse(); 
           var max = 0;
           var newSize = size;
           var orders = [];
@@ -189,14 +195,14 @@ export default {
     },
   },
   mounted() {
-    this.sellerSelectOrderById(4, 1);
+    this.sellerSelectOrderById(5, 1);
   },
 };
 </script> 
 <style>
 .el-header {
   background-color: #b3c0d1;
-  color: #333;
+  color: rgb(51, 51, 51);
   line-height: 60px;
 }
 .el-aside {

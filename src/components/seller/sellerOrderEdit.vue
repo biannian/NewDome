@@ -7,8 +7,7 @@
       <el-container>
         <el-header>
           <seller-header></seller-header>
-           </el-header>
-
+           </el-header> 
         <el-breadcrumb
           separator-class="el-icon-arrow-right"
           style="margin-top: 20px; margin-left: 20px"

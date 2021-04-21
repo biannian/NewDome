@@ -1,11 +1,9 @@
 <template>
   <el-header style="text-align: right; font-size: 21px">
     <span> {{ userName }}|</span>
-    <a @click="exit">注销</a>
-    
+    <a @click="exit">注销</a> 
   </el-header>
-</template>
-
+</template> 
 <script>
 import api from "@/api/api";
 export default {
@@ -19,8 +17,7 @@ export default {
       sessionStorage.clear();
       this.$router.push({ path: "/" });
     },
-  },
-
+  }, 
   mounted() {
     api
       .getLimit()

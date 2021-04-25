@@ -95,7 +95,7 @@ import SellerHeader from "./sellerHeader.vue";
 import { Message } from "element-ui";
 export default {
   components: { SellerAside, SellerHeader },
-  methods: {},
+
   data() {
     return {
       ruleForm: {

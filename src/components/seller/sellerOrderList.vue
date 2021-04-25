@@ -13,7 +13,8 @@
           style="margin-top: 20px; margin-left: 20px"
         >
           <el-breadcrumb-item :to="{ path: '/seller/sellerIndex' }"
-            >首页</el-breadcrumb-item
+          >首页
+          </el-breadcrumb-item
           >
           <el-breadcrumb-item>订单列表</el-breadcrumb-item>
         </el-breadcrumb>
@@ -22,10 +23,12 @@
             <el-table-column fixed="left" width="150" label="操作">
               <template slot-scope="scope">
                 <el-button size="mini" @click="toDetail(scope.row)"
-                  >查看</el-button
+                >查看
+                </el-button
                 >
                 <el-button size="mini" @click="openOrderMsg(scope.row)"
-                  >进度</el-button
+                >进度
+                </el-button
                 >
               </template>
             </el-table-column>
@@ -118,7 +121,7 @@
             <el-table-column prop="riderTel" label="骑手手机号" width="110">
             </el-table-column> -->
           </el-table>
-          <br />
+          <br/>
           <div class="block">
             <el-pagination
               @size-change="handleSizeChange"
@@ -165,166 +168,167 @@
   </div>
 </template>
 <script>
-import api from "@/api/api";
-import SellerAside from "./sellerAside.vue";
-import SellerHeader from "./sellerHeader.vue";
-export default {
-  components: { SellerAside, SellerHeader },
-  methods: {},
-  data() {
-    return {
-      isOrderMsg: false,
-      size: "",
-      current: "",
-      total: 0,
-      commodityWidth: "",
-      orderList: [],
-      order: {},
-    };
-  },
+  import api from '@/api/api'
+  import SellerAside from './sellerAside.vue'
+  import SellerHeader from './sellerHeader.vue'
 
-  methods: {
-    openOrderMsg(val) {
-      this.order = val;
-      this.isOrderMsg = true;
+  export default {
+    components: {SellerAside, SellerHeader},
+    data () {
+      return {
+        isOrderMsg: false,
+        size: '',
+        current: '',
+        total: 0,
+        commodityWidth: '',
+        orderList: [],
+        order: {},
+      }
     },
-    toDetail(val) { 
-      var order = JSON.stringify(val); 
-      this.$router.push({
-        path: "/seller/sellerOrderDetail",
-        query: { order: order },
-      });
-    },
-    handleSizeChange(val) {
-      this.sellerOrder(val, this.current);
-    },
-    handleCurrentChange(val) {
-      this.sellerOrder(this.size, val);
-    },
-    sellerOrder(size, current) {
-      this.size = size;
-      this.current = current;
-      let param = {
-        shopId: sessionStorage["shopId"],
-        orderState: "-3",
-      };
-      api.queryOrder(param).then((res) => {
-        if (res.data.result) {
-          var order = res.data.result.reverse();
-          var max = 0;
-          var newSize = size;
-          var orders = [];
-          var number = (current - 1) * size;
-          order.forEach((element) => {
-            if ((number -= 1) < 0) {
-              if ((newSize -= 1) >= 0) {
-                orders.push(element);
-              }
-            }
-          });
-          orders.forEach((element) => {
-            if (element.shopping.length > max) {
-              max = element.shopping.length;
-            }
-          });
-          this.total = order.length;
-          this.commodityWidth = max;
-          this.orderList = orders;
+
+    methods: {
+      openOrderMsg (val) {
+        this.order = val
+        this.isOrderMsg = true
+      },
+      toDetail (val) {
+        var order = JSON.stringify(val)
+        this.$router.push({
+          path: '/seller/sellerOrderDetail',
+          query: {order: order},
+        })
+      },
+      handleSizeChange (val) {
+        this.sellerOrder(val, this.current)
+      },
+      handleCurrentChange (val) {
+        this.sellerOrder(this.size, val)
+      },
+      sellerOrder (size, current) {
+        this.size = size
+        this.current = current
+        let param = {
+          shopId: sessionStorage['shopId'],
+          orderState: '-3',
         }
-      });
+        api.queryOrder(param).then((res) => {
+          if (res.data.result) {
+            var order = res.data.result.reverse()
+            var max = 0
+            var newSize = size
+            var orders = []
+            var number = (current - 1) * size
+            order.forEach((element) => {
+              if ((number -= 1) < 0) {
+                if ((newSize -= 1) >= 0) {
+                  orders.push(element)
+                }
+              }
+            })
+            orders.forEach((element) => {
+              if (element.shopping.length > max) {
+                max = element.shopping.length
+              }
+            })
+            this.total = order.length
+            this.commodityWidth = max
+            this.orderList = orders
+          }
+        })
+      },
     },
-  },
 
-  mounted() {
-    this.sellerOrder(5, 1);
-  },
-};
+    mounted () {
+      this.sellerOrder(5, 1)
+    },
+  }
 </script>
 
 <style lang="scss">
-.el-header {
-  background-color: #b3c0d1;
-  color: #333;
-  line-height: 60px;
-}
-.el-aside {
-  color: #333;
-}
-
-.order_list_container {
-  margin-top: 30px;
-  margin-left: 20px;
-  margin-right: 20px;
-
-  .order_box {
-    margin-bottom: 20px;
-    display: block;
-    background: #fff;
-
-    &:hover {
-      background: rgba(227, 232, 238, 0.33);
-    }
+  .el-header {
+    background-color: #b3c0d1;
+    color: #333;
+    line-height: 60px;
   }
 
-  .thead {
-    color: #3a3a3a;
-    height: 36px;
-    line-height: 36px;
-    padding: 0 50px;
-    border-bottom: 1px #e3e8ee solid;
-    font-size: 14px;
-
-    .export_order_btn {
-      margin-top: 4px;
-      margin-left: 30px;
-    }
-
-    .fr {
-      margin-left: 20px;
-    }
-
-    .i-edit {
-      margin-top: 2px;
-      width: 30px;
-      height: 30px;
-      line-height: 30px;
-      color: #0142a1;
-      border-radius: 50%;
-      text-align: center;
-      border: 1px #0142a1 solid;
-      font-size: 20px;
-      cursor: pointer;
-    }
+  .el-aside {
+    color: #333;
   }
 
-  .order_note {
-    margin-top: 10px;
-    padding-left: 2%;
-    width: 98%;
-    color: #666;
-    font-size: 14px;
-    line-height: 18px;
-  }
+  .order_list_container {
+    margin-top: 30px;
+    margin-left: 20px;
+    margin-right: 20px;
 
-  .img_list {
-    margin: 0;
-    width: 100%;
-    height: 100px;
-    cursor: pointer;
+    .order_box {
+      margin-bottom: 20px;
+      display: block;
+      background: #fff;
 
-    li {
-      display: inline-block;
-      width: 130px;
+      &:hover {
+        background: rgba(227, 232, 238, 0.33);
+      }
+    }
+
+    .thead {
+      color: #3a3a3a;
+      height: 36px;
+      line-height: 36px;
+      padding: 0 50px;
+      border-bottom: 1px #e3e8ee solid;
+      font-size: 14px;
+
+      .export_order_btn {
+        margin-top: 4px;
+        margin-left: 30px;
+      }
+
+      .fr {
+        margin-left: 20px;
+      }
+
+      .i-edit {
+        margin-top: 2px;
+        width: 30px;
+        height: 30px;
+        line-height: 30px;
+        color: #0142a1;
+        border-radius: 50%;
+        text-align: center;
+        border: 1px #0142a1 solid;
+        font-size: 20px;
+        cursor: pointer;
+      }
+    }
+
+    .order_note {
+      margin-top: 10px;
+      padding-left: 2%;
+      width: 98%;
+      color: #666;
+      font-size: 14px;
+      line-height: 18px;
+    }
+
+    .img_list {
+      margin: 0;
+      width: 100%;
       height: 100px;
-      margin-right: 10px;
-      background-size: contain;
-      overflow: hidden;
+      cursor: pointer;
+
+      li {
+        display: inline-block;
+        width: 130px;
+        height: 100px;
+        margin-right: 10px;
+        background-size: contain;
+        overflow: hidden;
+      }
     }
   }
-}
 
-.page_list {
-  text-align: center;
-  margin: 20px auto;
-}
+  .page_list {
+    text-align: center;
+    margin: 20px auto;
+  }
 </style>

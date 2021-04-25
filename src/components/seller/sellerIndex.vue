@@ -12,7 +12,7 @@
           <p style="font-size: 20px">欢迎登录</p>
           <p style="font-size: 20px">{{ shopName }}</p>
 
-      
+
         </el-main>
       </el-container>
     </el-container>
@@ -26,9 +26,7 @@ import api from "@/api/api";
 import sellerAside from "./sellerAside";
 import sellerHeader from "./sellerHeader";
 export default {
-  methods: {
-   
-  },
+
   components: { sellerAside, sellerHeader },
 
   data() {
@@ -41,13 +39,13 @@ export default {
     api
       .getLimit()
       .then((response) => {
-       
+
         let a = {
           sellerId: response.data.result.accountUserId,
         };
 
         api.queryShopName(a).then((res) => {
-    
+
           if (res.data.result != null) {
             sessionStorage["shopId"] = res.data.result.shopId;
             this.shopName = res.data.result.shopName;

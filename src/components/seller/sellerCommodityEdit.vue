@@ -52,7 +52,7 @@
             >
              <img width="150px" :src="Form.commodityImg" />
               <el-upload
-              
+
                 action
                 ref="upload"
                 list-type="picture-card"
@@ -89,7 +89,7 @@
                 </el-select>
               </el-col>
             </el-form-item>
-         
+
 
             <el-form-item
               label="商品库存"
@@ -131,7 +131,6 @@ import SellerAside from "./sellerAside.vue";
 import SellerHeader from "./sellerHeader.vue";
 export default {
   components: { SellerAside, SellerHeader },
-  methods: {},
   data() {
     return {
       dialogVisible: false,
@@ -218,7 +217,7 @@ export default {
   },
 
   mounted() {
- 
+
    // this.Form.commodityMenuId = this.$route.query.shopMenuName;
      this.Form = this.$route.query;
     this.selectMenu();

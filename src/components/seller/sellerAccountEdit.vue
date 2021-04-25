@@ -15,11 +15,11 @@
         >
           <el-breadcrumb-item :to="{ path: '/seller/sellerIndex' }"
             >首页</el-breadcrumb-item
-          > 
+          >
           <el-breadcrumb-item>账户修改</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
-  
+
   <el-form
           :model="ruleForm"
           status-icon
@@ -76,7 +76,7 @@ import SellerAside from './sellerAside.vue';
 import SellerHeader from './sellerHeader.vue';
 export default {
   components: {SellerAside, SellerHeader  },
-  methods: {},
+
   data() {
     var validatePass = (rule, value, callback) => {
       if (value === "") {
@@ -126,7 +126,7 @@ export default {
             .then((response) => {
               if (response.data.result == 1) {
                 Message.success("修改成功！");
-                 
+
               } else {
                 Message.error("修改失败！");
               }

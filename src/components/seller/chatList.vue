@@ -19,7 +19,7 @@
           <el-breadcrumb-item>销售管理</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
-        
+
         </el-main>
       </el-container>
     </el-container>
@@ -31,10 +31,10 @@ import SellerAside from './sellerAside.vue';
 import SellerHeader from './sellerHeader.vue';
 export default {
   components: {SellerAside, SellerHeader  },
-  methods: {},
+
   data() {
     return {
-   
+
     };
   },
   methods: {
@@ -42,11 +42,11 @@ export default {
       // let params = row;
       // this.$router.push({ path: "/root/accountEdit", params });
     },
-   
+
   },
 
   mounted() {
-  
+
   },
 };
 </script>

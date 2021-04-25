@@ -25,23 +25,23 @@
                  <el-button
                     size="mini"
                    @click="toDetail(scope.row)"
-                   
+
                     >详情</el-button
-                  > 
+                  >
                   <el-button
                     size="mini"
                     @click="confirm(scope.row)"
-                   
-                    >接单</el-button
-                  > 
 
-                
+                    >接单</el-button
+                  >
+
+
                   <el-button
                     size="mini"
                     @click="cancel(scope.row)"
                     type="danger"
                     >拒单</el-button
-                  > 
+                  >
               </template>
             </el-table-column>
             <el-table-column prop="orderId" label="编号" width="50">
@@ -101,7 +101,7 @@ import Index from "../buyer/index.vue";
 import { Message } from "element-ui";
 export default {
   components: { SellerAside, SellerHeader, Index },
-  methods: {},
+
   data() {
     return {
       size: "",
@@ -113,15 +113,15 @@ export default {
   },
 
   methods: {
-     toDetail(val) { 
-      var order = JSON.stringify(val); 
+     toDetail(val) {
+      var order = JSON.stringify(val);
       this.$router.push({
         path: "/seller/sellerOrderDetail",
         query: { order: order },
       });
     },
-      cancel(order) { 
-      let a = { 
+      cancel(order) {
+      let a = {
         orderId: order.orderId,
         orderState: "-1",
       };
@@ -165,7 +165,7 @@ export default {
       };
       api.queryOrder(param).then((res) => {
         if (res.data.result) {
-          var order = res.data.result.reverse(); 
+          var order = res.data.result.reverse();
           var max = 0;
           var newSize = size;
           var orders = [];
@@ -193,7 +193,7 @@ export default {
     this.sellerSelectOrderById(5, 1);
   },
 };
-</script> 
+</script>
 <style>
 .el-header {
   background-color: #b3c0d1;

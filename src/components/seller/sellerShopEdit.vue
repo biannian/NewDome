@@ -156,7 +156,7 @@
                 >
                 </el-time-select>
               </el-col>
-            </el-form-item> 
+            </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="submitForm('Form')"
                 >提交</el-button
@@ -170,13 +170,13 @@
   </div>
 </template>
 <script>
-import api from "@/api/api"; 
+import api from "@/api/api";
 import { Message } from "element-ui";
 import SellerAside from "./sellerAside.vue";
 import SellerHeader from "./sellerHeader.vue";
 export default {
   components: { SellerAside, SellerHeader },
-  methods: {},
+
   data() {
     return {
       menus: [],
@@ -292,7 +292,7 @@ export default {
 
   mounted() {
     this.selectMenu();
-    this.selectShop(); 
+    this.selectShop();
   },
 };
 </script>

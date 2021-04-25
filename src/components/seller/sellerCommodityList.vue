@@ -55,14 +55,14 @@
             </el-table-column>
             <el-table-column fixed="right" label="操作">
               <template slot-scope="scope">
-                
+
                 <el-button size="mini" @click="edit(scope.row)"
                   >修改
                 </el-button>
                 <el-popover placement="top" width="160">
                   <p>确定要删除此商品吗？</p>
                   <div style="text-align: right; margin: 0">
-                      
+
                     <el-button
                       type="primary"
                       size="mini"
@@ -103,7 +103,6 @@ import SellerHeader from "./sellerHeader.vue";
 import { Message } from "element-ui";
 export default {
   components: { SellerAside, SellerHeader },
-  methods: {},
   data() {
     return {
       searchText: "",
@@ -120,9 +119,7 @@ export default {
     },
   },
   methods: {
-    search() {
-      console.log(14);
-    },
+
     handleSizeChange(val) {
       this.selectCommodity(val, this.current, this.searchText);
     },
@@ -169,16 +166,16 @@ export default {
             .queryAllCommodity(a)
             .then((res) => {
               if (res.data.result) {
-                var commodityList = res.data.result; 
+                var commodityList = res.data.result;
                 if (search) {
                   var commodity = [];
-                  var reg = /^[0-9]*$/; 
+                  var reg = /^[0-9]*$/;
                   if (reg.test(search)) {
                     //输入的内容为纯数字
                     commodityList.forEach((element) => {
                       if (element.commodityId.toString().includes(search)) {
                         commodity.push(element);
-                      } 
+                      }
                     });
                   } else {
                     //输入的内容不为纯数字
@@ -190,7 +187,7 @@ export default {
                   }
                 }else{
                   var commodity = commodityList;
-                } 
+                }
                 var newSize = size;
                 var commoditys = [];
                 var number = (current - 1) * size;

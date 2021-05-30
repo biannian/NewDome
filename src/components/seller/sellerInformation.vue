@@ -110,9 +110,7 @@ export default {
   methods: {
     submitForm(ruleForm) {
       this.$refs[ruleForm].validate((valid) => {
-        if (valid) {
-          console.log("验证通过");
-          console.log(this.ruleForm);
+        if (valid) { 
           api
             .updateSellerAddress(this.ruleForm)
             .then((response) => {

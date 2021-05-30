@@ -19,7 +19,7 @@
           <el-breadcrumb-item>销售管理</el-breadcrumb-item>
         </el-breadcrumb>
         <el-main>
-
+          <el-progress :percentage="50"></el-progress>
         </el-main>
       </el-container>
     </el-container>

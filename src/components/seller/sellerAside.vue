@@ -18,7 +18,7 @@
     </el-submenu>
     <el-submenu index="4">
       <template slot="title">店铺管理</template>
-    <el-menu-item  index="/seller/chatList">销售管理</el-menu-item>
+    <el-menu-item  index="/seller/chatList">评价管理</el-menu-item>
       <el-menu-item index="/seller/sellerShopEdit">店铺信息</el-menu-item>
   
     </el-submenu>

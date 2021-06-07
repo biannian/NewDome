@@ -141,6 +141,7 @@ export default {
   },
 
   mounted() {
+    console.log();
     api
         .getLimit()
         .then((response) => {

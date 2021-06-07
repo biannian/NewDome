@@ -9,7 +9,7 @@
              <Header ></Header>
          </el-header>
         <el-main>
-          欢迎登录
+         <p  style="font-size: 20px">欢迎管理员登录</p> 
      </el-main>
       </el-container>
     </el-container>

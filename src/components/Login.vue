@@ -54,7 +54,7 @@
     </el-row>
     <el-row type="flex" class="row-bg" justify="center">
       <el-col :span="2">
-        <el-button @click="logindo" type="success">confirm</el-button>
+        <el-button @click="logindo" type="success">login</el-button>
       </el-col>
       <el-col :span="2">
         <el-button @click="reset" type="primary">reset</el-button>

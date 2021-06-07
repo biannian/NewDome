@@ -113,4 +113,10 @@ export default{
 	updateShopInformation(params){
 		return http.post(`${resquest}/shop/updateShopInformation.do`,params)
 	},
+	selectComment(params){
+		return http.get(`${resquest}/shop/selectComment.do`,params)
+	}, 
+	updateComment(params){
+		return http.get(`${resquest}/shop/updateComment.do`,params)
+	}, 
 }

@@ -8,6 +8,8 @@ import shop from '@/components/buyer/shop'
 import accountIndex from '@/components/root/accountIndex'
 import commodityList from '@/components/root/commodityList'
 import accountList from '@/components/root/accountList'
+import shopEdit from  '@/components/root/shopEdit'
+import shopList from  '@/components/root/shopList'
 import sellerShopEdit from '@/components/seller/sellerShopEdit'
 import personalAddress from '@/components/buyer/personalAddress'
 import chat from '@/components/buyer/chat'
@@ -17,8 +19,6 @@ import sellerIndex from '@/components/seller/sellerIndex'
 import sellerOrder from '@/components/seller/sellerOrder'
 import sellerAccountEdit from '@/components/seller/sellerAccountEdit'
 import sellerOrderList from '@/components/seller/sellerOrderList'
-
-
 import sellerOrderEdit from '@/components/seller/sellerOrderEdit'
 import cancelEdit from '@/components/seller/cancelEdit'
 import sellerInformation from '@/components/seller/sellerInformation'
@@ -62,6 +62,14 @@ export const routes = [
     name: 'accountList',
     component: accountList,
   }, {
+    path: '/root/shopList',
+    name: 'shopList',
+    component: shopList,
+  },  {
+    path: '/root/shopEdit',
+    name: 'shopEdit',
+    component: shopEdit,
+  },  {
     path: '/seller/sellerShopEdit',
     name: 'sellerShopEdit',
     component: sellerShopEdit,
